@@ -66,11 +66,16 @@ class MyWin(QtWidgets.QMainWindow):
     def cell_was_clicked(self, row, column):
         # Вилучаємо вміст вибраної комірки
         if self.mode == "edit":
-            print("sss")
+            print("sss  ",end="")
             #
             #   вилучаємо вміст
-            k = self.ui.tableWidget.item(row, column).text()
-            kl = QtWidgets.QTableWidgetItem("")
+            k = self.ui.tableWidget.item(row, column)
+            if k == None:
+                k = ""
+            else:
+                k = k.text()
+            print (k)
+            kl = QtWidgets.QTableWidgetItem(self.oldClass)
             self.ui.tableWidget.setItem(row, column, kl)
             #   записуємо до комірки низ зписку
             if self.Dialog.listWidget.count() == 0:
@@ -80,9 +85,13 @@ class MyWin(QtWidgets.QMainWindow):
                     self.ui.tableWidget.setItem(row, column, kl)
 
             #   записуємо вилучене до низу списку
-            item = QtWidgets.QListWidgetItem(k)
-            self.Dialog.listWidget.addItem(item)
-            self.oldClass = item.text()
+            if k !="":
+                item = QtWidgets.QListWidgetItem(k)
+                self.Dialog.listWidget.addItem(item)
+                self.oldClass = item.text()
+            else:
+                self.oldClass =""
+
 
 
 
