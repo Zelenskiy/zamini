@@ -24,6 +24,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.radioButton.setChecked(True)
 
         self.mode = "view"
+        self.oldClass = ""
 
         #self.list_init()
 
@@ -67,21 +68,25 @@ class MyWin(QtWidgets.QMainWindow):
         if self.mode == "edit":
             print("sss")
             #
+            #   вилучаємо вміст та записуємо до комірки низ списку
 
-            #   вилучаємо вміст
-            k = self.ui.tableWidget.item(row, column).text()
-            kl = QtWidgets.QTableWidgetItem("")
+
+            kl = QtWidgets.QTableWidgetItem(self.oldClass)
             self.ui.tableWidget.setItem(row, column, kl)
-            #   записуємо до комірки низ зписку
-            if self.Dialog.listWidget.count()==0:
-                ss = self.Dialog.listWidget.currentRow()
-                if ss!=-1:
-                    kl = QtWidgets.QTableWidgetItem(ss)
-                    self.ui.tableWidget.setItem(row, column, kl)
+            #
+            # if self.Dialog.listWidget.count() == 0:
+            #     ss = self.Dialog.listWidget.currentRow()
+            #     if ss != -1:
+            #         kl = QtWidgets.QTableWidgetItem(ss)
+            #         self.ui.tableWidget.setItem(row, column, kl)
 
             #   записуємо вилучене до низу списку
-            item = QtWidgets.QListWidgetItem(k)
-            self.Dialog.listWidget.addItem(item)
+            k0 = self.ui.tableWidget.item(row, column)
+            if k0 != None:
+                k = k0.text()
+                item = QtWidgets.QListWidgetItem(k)
+                self.Dialog.listWidget.addItem(item)
+                self.oldClass = item.text()
 
 
 
@@ -153,6 +158,12 @@ class MyWin(QtWidgets.QMainWindow):
 
     def btn2_Click(self):
         print("")
+    def item_clicked(item):
+        #n = item.text()
+        # value = self.Dialog.listWidget.model().data(0)
+
+        #print(n)
+        print("----")
 
     def btn4_Click(self):
         self.ui.pushButton_4.setStyleSheet("font-weight: bold; background-color:yellow;")
@@ -189,6 +200,8 @@ class MyWin(QtWidgets.QMainWindow):
         self.Dialog.pushButton_2.setObjectName("pushButton_2")
         self.Dialog.horizontalLayout.addWidget(self.Dialog.pushButton_2)
         self.Dialog.verticalLayout.addLayout(self.Dialog.horizontalLayout)
+
+        self.Dialog.listWidget.itemClicked.connect(self.item_clicked)
 
         self.Dialog.pushButton.setText("1")
         self.Dialog.pushButton_2.setText("2")
