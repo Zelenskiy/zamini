@@ -7,8 +7,6 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QAction,\
 from PyQt5 import QtCore,  QtWidgets
 from PyQt5.QtCore import Qt
 
-
-
 import controls.funcRozklad as fr
 import models.rozklad as rzkl
 
