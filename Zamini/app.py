@@ -68,25 +68,21 @@ class MyWin(QtWidgets.QMainWindow):
         if self.mode == "edit":
             print("sss")
             #
-            #   вилучаємо вміст та записуємо до комірки низ списку
-
-
-            kl = QtWidgets.QTableWidgetItem(self.oldClass)
+            #   вилучаємо вміст
+            k = self.ui.tableWidget.item(row, column).text()
+            kl = QtWidgets.QTableWidgetItem("")
             self.ui.tableWidget.setItem(row, column, kl)
-            #
-            # if self.Dialog.listWidget.count() == 0:
-            #     ss = self.Dialog.listWidget.currentRow()
-            #     if ss != -1:
-            #         kl = QtWidgets.QTableWidgetItem(ss)
-            #         self.ui.tableWidget.setItem(row, column, kl)
+            #   записуємо до комірки низ зписку
+            if self.Dialog.listWidget.count() == 0:
+                ss = self.Dialog.listWidget.currentRow()
+                if ss != -1:
+                    kl = QtWidgets.QTableWidgetItem(ss)
+                    self.ui.tableWidget.setItem(row, column, kl)
 
             #   записуємо вилучене до низу списку
-            k0 = self.ui.tableWidget.item(row, column)
-            if k0 != None:
-                k = k0.text()
-                item = QtWidgets.QListWidgetItem(k)
-                self.Dialog.listWidget.addItem(item)
-                self.oldClass = item.text()
+            item = QtWidgets.QListWidgetItem(k)
+            self.Dialog.listWidget.addItem(item)
+            self.oldClass = item.text()
 
 
 
