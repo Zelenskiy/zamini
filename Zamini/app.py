@@ -105,6 +105,7 @@ class MyWin(QtWidgets.QMainWindow):
 
             self.ui.pushButton_4.setStyleSheet("background-color: rgb("+str(r)+","+str(g)+","+str(b)+")")
 
+    """
     def myDropEvent(self, event):
         print("myDropEvent (%s)" % event.pos())
         #super().DropEvent(event)
@@ -138,6 +139,7 @@ class MyWin(QtWidgets.QMainWindow):
 
     def table_Move(self):
         print("ssss")
+    """
 
     def radioButton_Click(self):
         fr.fillTable(myapp.ui, roz)
