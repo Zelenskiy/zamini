@@ -84,6 +84,8 @@ class MyWin(QtWidgets.QMainWindow):
                     kl = QtWidgets.QTableWidgetItem(ss)
                     self.ui.tableWidget.setItem(row, column, kl)
 
+                    #!!!!!!!!!!!
+
             #   записуємо вилучене до низу списку
             if k !="":
                 item = QtWidgets.QListWidgetItem(k)
