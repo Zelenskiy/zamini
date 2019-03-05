@@ -7,9 +7,8 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QAction,\
 from PyQt5 import QtCore,  QtWidgets
 from PyQt5.QtCore import Qt
 
-
-
-import controls.funcRozklad as fr
+from controls.funcRozklad import *
+#import controls.funcRozklad as fr
 import models.rozklad as rzkl
 
 
@@ -26,6 +25,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.radioButton.setChecked(True)
 
         self.mode = "view"
+        self.oldClass = ""
 
         #self.list_init()
 
@@ -67,23 +67,32 @@ class MyWin(QtWidgets.QMainWindow):
     def cell_was_clicked(self, row, column):
         # Вилучаємо вміст вибраної комірки
         if self.mode == "edit":
-            print("sss")
+            print("sss  ",end="")
             #
-
             #   вилучаємо вміст
-            k = self.ui.tableWidget.item(row, column).text()
-            kl = QtWidgets.QTableWidgetItem("")
+            k = self.ui.tableWidget.item(row, column)
+            if k is None:
+                k = ""
+            else:
+                k = k.text()
+            print (k)
+            kl = QtWidgets.QTableWidgetItem(self.oldClass)
             self.ui.tableWidget.setItem(row, column, kl)
             #   записуємо до комірки низ зписку
-            if self.Dialog.listWidget.count()==0:
+            if self.Dialog.listWidget.count() == 0:
                 ss = self.Dialog.listWidget.currentRow()
-                if ss!=-1:
+                if ss != -1:
                     kl = QtWidgets.QTableWidgetItem(ss)
                     self.ui.tableWidget.setItem(row, column, kl)
 
             #   записуємо вилучене до низу списку
-            item = QtWidgets.QListWidgetItem(k)
-            self.Dialog.listWidget.addItem(item)
+            if k != "":
+                item = QtWidgets.QListWidgetItem(k)
+                self.Dialog.listWidget.addItem(item)
+                self.oldClass = item.text()
+            else:
+                self.oldClass = ""
+
 
 
 
@@ -107,6 +116,7 @@ class MyWin(QtWidgets.QMainWindow):
 
             self.ui.pushButton_4.setStyleSheet("background-color: rgb("+str(r)+","+str(g)+","+str(b)+")")
 
+    """
     def myDropEvent(self, event):
         print("myDropEvent (%s)" % event.pos())
         #super().DropEvent(event)
@@ -140,12 +150,13 @@ class MyWin(QtWidgets.QMainWindow):
 
     def table_Move(self):
         print("ssss")
+    """
 
     def radioButton_Click(self):
-        fr.fillTable(myapp.ui, roz)
+        fillTable(myapp.ui, roz)
 
     def radioButton_2_Click(self):
-        fr.fillTable(myapp.ui, roz)
+        fillTable(myapp.ui, roz)
 
     def btn1_Click(self):
         #self.list_show()
@@ -153,6 +164,12 @@ class MyWin(QtWidgets.QMainWindow):
 
     def btn2_Click(self):
         print("")
+    def item_clicked(item):
+        #n = item.text()
+        # value = self.Dialog.listWidget.model().data(0)
+
+        #print(n)
+        print("----")
 
     def btn4_Click(self):
         self.ui.pushButton_4.setStyleSheet("font-weight: bold; background-color:yellow;")
@@ -190,6 +207,8 @@ class MyWin(QtWidgets.QMainWindow):
         self.Dialog.horizontalLayout.addWidget(self.Dialog.pushButton_2)
         self.Dialog.verticalLayout.addLayout(self.Dialog.horizontalLayout)
 
+        self.Dialog.listWidget.itemClicked.connect(self.item_clicked)
+
         self.Dialog.pushButton.setText("1")
         self.Dialog.pushButton_2.setText("2")
 
@@ -213,7 +232,7 @@ if __name__=="__main__":
 
     #Формуємо класи розкладу
     roz = rzkl.Rozklad(r'2019_01_tmp_UTF-8.xml')
-    fr.fillTable(myapp.ui, roz)
+    fillTable(myapp.ui, roz)
 
 
 
