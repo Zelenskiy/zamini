@@ -1,5 +1,5 @@
 from PyQt5 import QtCore,  QtWidgets
-from controls.funcRozklad import rowCol_to_dayPeriod, dayPeriodTeach_to_addr
+from controls.funcRozklad import rowCol_to_dayPeriod, dayPeriodTeach_to_addr, rowCol_to_addr, addr_to_dayPeriodTeach, getForCard
 from PyQt5.QtCore import Qt, QTimer
 
 def testFunc():
@@ -29,8 +29,13 @@ def cell_clicked(self, roz,row, column):
             k = ""
         else:
             k = k.text()
+            adr = rowCol_to_addr(roz, row, column)
+
+            tmpCard = getForCard(roz, day, period, teachId, weeks)
+            del roz.dopTable[adr]
         print(k)
         kl = QtWidgets.QTableWidgetItem(self.oldClass)
+
         self.ui.tableWidget.setItem(row, column, kl)
         #   записуємо до комірки низ зписку
         if self.Dialog.listWidget.count() == 0:
@@ -47,6 +52,16 @@ def cell_clicked(self, roz,row, column):
             self.Dialog.listWidget.addItem(item)
             #TODO
             self.oldClass = item.text()
+            #Запишемо на нове місце дану карточку
+            adr = rowCol_to_addr(roz, row, column)
+            day, period, teachId = addr_to_dayPeriodTeach(roz, adr)
+            if (self.ui.radioButton.isChecked):
+                weeks = "1"
+            else:
+                weeks = "01"
+
+            roz.oldCard = getForCard(roz, day, period, teachId, weeks)
+
         else:
             self.oldClass = ""
 

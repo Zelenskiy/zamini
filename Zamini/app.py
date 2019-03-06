@@ -44,10 +44,11 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.tableWidget.setMouseTracking(True)
 
         self.ui.tableWidget.cellClicked.connect(self.cell_was_clicked)
-        self.ui.tableWidget.cellEntered.connect(self.cellHover)
+        #self.ui.tableWidget.cellEntered.connect(self.cellHover)
 
     def cellHover (self, row, column):
         print ("========================")
+        self.ui.tableWidget.setToolTip("")
 
 
     def eventFilter(self, source, event):
@@ -112,7 +113,7 @@ if __name__=="__main__":
     roz.periods_count = len(roz.periods)
     fillTable(myapp.ui, roz)
     periods_count = len(roz.periods)
-    print(addr_to_card( roz, "R4C4"))
-    print(addr_to_dayPeriodTeach(roz, "R4C4"))
+    #print(addr_to_card( roz, "R4C4"))
+    #print(addr_to_dayPeriodTeach(roz, "R4C4"))
     myapp.show()
     sys.exit(app.exec_())

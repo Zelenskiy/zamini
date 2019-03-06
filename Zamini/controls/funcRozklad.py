@@ -43,7 +43,13 @@ def rowCol_to_dayPeriod(roz, row, col):
     teachId = "*" + str(row+1)
     return day, period, teachId
 
-def dayPeriodTeach_to_addr(roz,day, period, teachId):   #teachId Приклад "*1"
+def rowCol_to_addr(roz, row, col):
+    day = col // roz.periods_count
+    period = col % roz.periods_count + 1
+    teachId = "*" + str(row + 1)
+    return dayPeriodTeach_to_addr(roz, day, period, teachId)
+
+def dayPeriodTeach_to_addr(roz, day, period, teachId):   #teachId Приклад "*1"
     row = int(teachId[1:]) - 1
     col = len(roz.periods) * int(day) + int(period) - 1
     return "R"+str(row)+"C"+str(col)

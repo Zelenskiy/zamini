@@ -14,6 +14,7 @@ class Rozklad(object):
         self.cards = cards
         self.dopTable ={}
         self.periods_count=0
+        oldCard = None
         """
         rowCount = len(teachers)
         colCount = (len(days)+1)* len(periods)
