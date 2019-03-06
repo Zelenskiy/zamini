@@ -25,6 +25,7 @@ class MyWin(QtWidgets.QMainWindow):
 
         self.mode = "view"
         self.oldClass = ""
+        self.periods_count = 8
 
         #self.list_init()
 
@@ -235,8 +236,8 @@ if __name__=="__main__":
     #Формуємо класи розкладу
     roz = rzkl.Rozklad(r'2019_01_tmp_UTF-8.xml')
     fr.fillTable(myapp.ui, roz)
-
-
+    periods_count = len(roz.periods)
+    print (periods_count)
 
 
     myapp.show()

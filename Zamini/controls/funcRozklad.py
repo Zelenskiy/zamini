@@ -35,19 +35,19 @@ def getForCard(roz, day, period, teach, weeks):
                     return c
     return None
 
-def dayPeriodTeach_to_addr(day, period, teachId):   #teachId Приклад "*1"
+def dayPeriodTeach_to_addr(self,day, period, teachId):   #teachId Приклад "*1"
     row = int(teachId[1:]) - 1
     col = len(period) * int(day) + int(period) - 1
     return "R"+str(row)+"C"+str(col)
 
 
 
-def addr_to_dayPeriodTeach(adr):
+def addr_to_dayPeriodTeach(self,adr):
     n = adr.find("C")
     teachId = "*"+adr[1:n]
     col = int(adr[n + 1:])
-    day = col // 8
-    period = col % 8 + 1
+    day = col // self.periods_count
+    period = col % self.periods_count + 1
     return day, period, teachId
 
 def fillTable(ui,roz):
