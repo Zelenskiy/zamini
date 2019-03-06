@@ -77,9 +77,9 @@ def fillTable(ui,roz):
     for c in roz.cards:
         col = len(roz.periods) * int(c.day) + int(c.period) - 1
         w = c.weeks
-        if (ui.radioButton.isChecked()) and (w=="01"):
+        if (ui.radioButton.isChecked()) and (w == "01"):
             continue
-        if (ui.radioButton_2.isChecked()) and (w=="10"):
+        if (ui.radioButton_2.isChecked()) and (w == "10"):
             continue
         for t in c.teacherInThisLesson:
             row = int(t.id[1:]) - 1

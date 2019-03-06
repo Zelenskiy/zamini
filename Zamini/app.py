@@ -1,6 +1,9 @@
 import sys
 
 from ui.mainform import *
+from controls.init import *
+from controls.control import *
+
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction,\
                             QWidget, qApp
 
@@ -11,6 +14,7 @@ import controls.funcRozklad as fr
 import models.rozklad as rzkl
 
 
+
 class MyWin(QtWidgets.QMainWindow):
 
 
@@ -19,7 +23,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.Dialog = QWidget(self, Qt.Window)
-        self.list_init()
+        list_init(self)
 
         self.ui.radioButton.setChecked(True)
 
@@ -27,13 +31,6 @@ class MyWin(QtWidgets.QMainWindow):
         self.oldClass = ""
         self.periods_count = 8
 
-        #self.list_init()
-
-        #self.ui.tableWidget.setDragEnabled(True)
-        #self.ui.tableWidget.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
-
-
-        # self.ui.tableWidget.setMouseTracking(True) #Щоб спрацьовувало при ненатиснутій кнопці
 
         #Тут описуємо події
         self.ui.pushButton.clicked.connect(self.btn1_Click)
@@ -65,58 +62,8 @@ class MyWin(QtWidgets.QMainWindow):
         return True
 
     def cell_was_clicked(self, row, column):
-        # Вилучаємо вміст вибраної комірки
-        if self.mode == "edit":
-            print("sss  ",end="")
-            #
-            #   вилучаємо вміст
-            k = self.ui.tableWidget.item(row, column)
-            if k == None:
-                k = ""
-            else:
-                k = k.text()
-            print (k)
-            kl = QtWidgets.QTableWidgetItem(self.oldClass)
-            self.ui.tableWidget.setItem(row, column, kl)
-            #   записуємо до комірки низ зписку
-            if self.Dialog.listWidget.count() == 0:
-                ss = self.Dialog.listWidget.currentRow()
-                if ss != -1:
-                    kl = QtWidgets.QTableWidgetItem(ss)
-                    self.ui.tableWidget.setItem(row, column, kl)
+        cell_clicked(self, roz, row, column) #Клацнули таблицю розкладу вчителів лівою кн. мишки
 
-                    #!!!!!!!!!!!
-
-            #   записуємо вилучене до низу списку
-            if k !="":
-                item = QtWidgets.QListWidgetItem(k)
-                self.Dialog.listWidget.addItem(item)
-                self.oldClass = item.text()
-            else:
-                self.oldClass =""
-
-
-
-
-        else:
-            print("Row %d and Column %d was clicked" % (row, column))
-            r, g, b = 255, 255, 255
-            item = self.ui.tableWidget.item(row, column)
-            if item != None:
-                cl = roz.dopTable.get("R"+str(row)+"C"+str(column))
-                ls = ""
-                for s in cl.subjInThisLesson:
-                    ls = ls + s.name
-                self.ui.label.setText(ls)
-                self.ui.pushButton_4.setText(item.text())
-                s = cl.teacherInThisLesson[0].color
-                r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
-            else:
-                self.ui.pushButton_4.setText("")
-                self.ui.label.setText("")
-
-
-            self.ui.pushButton_4.setStyleSheet("background-color: rgb("+str(r)+","+str(g)+","+str(b)+")")
 
     """
     def myDropEvent(self, event):
@@ -188,32 +135,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.Dialog.show()
 
 
-    def list_init(self):
-        self.Dialog.resize(265, 300)
-        self.Dialog.verticalLayout = QtWidgets.QVBoxLayout(self.Dialog)
-        self.Dialog.verticalLayout.setObjectName("verticalLayout")
-        self.Dialog.listWidget = QtWidgets.QListWidget(self.Dialog)
-        self.Dialog.listWidget.setObjectName("listWidget")
-        self.Dialog.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.Dialog.verticalLayout.addWidget(self.Dialog.listWidget)
 
-        self.Dialog.horizontalLayout.setObjectName("horizontalLayout")
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.Dialog.horizontalLayout.addItem(spacerItem)
-        self.Dialog.pushButton = QtWidgets.QPushButton(self.Dialog)
-        self.Dialog.pushButton.setMaximumSize(QtCore.QSize(40, 16777215))
-        self.Dialog.pushButton.setObjectName("pushButton")
-        self.Dialog.horizontalLayout.addWidget(self.Dialog.pushButton)
-        self.Dialog.pushButton_2 = QtWidgets.QPushButton(self.Dialog)
-        self.Dialog.pushButton_2.setMaximumSize(QtCore.QSize(40, 16777215))
-        self.Dialog.pushButton_2.setObjectName("pushButton_2")
-        self.Dialog.horizontalLayout.addWidget(self.Dialog.pushButton_2)
-        self.Dialog.verticalLayout.addLayout(self.Dialog.horizontalLayout)
-
-        self.Dialog.listWidget.itemClicked.connect(self.item_clicked)
-
-        self.Dialog.pushButton.setText("1")
-        self.Dialog.pushButton_2.setText("2")
 
 
 
@@ -237,7 +159,7 @@ if __name__=="__main__":
     roz = rzkl.Rozklad(r'2019_01_tmp_UTF-8.xml')
     fr.fillTable(myapp.ui, roz)
     periods_count = len(roz.periods)
-    print (periods_count)
+
 
 
     myapp.show()
