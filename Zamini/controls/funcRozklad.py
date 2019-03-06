@@ -40,6 +40,8 @@ def dayPeriodTeach_to_addr(day, period, teachId):   #teachId Приклад "*1"
     col = len(period) * int(day) + int(period) - 1
     return "R"+str(row)+"C"+str(col)
 
+
+
 def addr_to_dayPeriodTeach(adr):
     n = adr.find("C")
     teachId = "*"+adr[1:n]
