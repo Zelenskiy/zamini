@@ -13,6 +13,7 @@ class Rozklad(object):
         self.lessons = lessons
         self.cards = cards
         self.dopTable ={}
+        self.periods_count=0
         """
         rowCount = len(teachers)
         colCount = (len(days)+1)* len(periods)
