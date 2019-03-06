@@ -186,6 +186,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.Dialog.show()
 
     def list_init(self):
+
         self.Dialog.resize(265, 300)
         self.Dialog.verticalLayout = QtWidgets.QVBoxLayout(self.Dialog)
         self.Dialog.verticalLayout.setObjectName("verticalLayout")
