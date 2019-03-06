@@ -41,10 +41,13 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.radioButton.clicked.connect(self.radioButton_Click)
         self.ui.radioButton_2.clicked.connect(self.radioButton_Click)
 
-
+        self.ui.tableWidget.setMouseTracking(True)
 
         self.ui.tableWidget.cellClicked.connect(self.cell_was_clicked)
+        self.ui.tableWidget.cellEntered.connect(self.cellHover)
 
+    def cellHover (self, row, column):
+        print ("========================")
 
 
     def eventFilter(self, source, event):

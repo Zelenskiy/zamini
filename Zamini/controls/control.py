@@ -60,14 +60,11 @@ def cell_clicked(self, roz,row, column):
             for s in cl.subjInThisLesson:
                 ls = ls + s.name
             self.ui.label.setText(ls)
-            #TODO
-            #self.ui.label.setToolTip("Some tooltip");
+
             day, period, teachId = rowCol_to_dayPeriod (roz, row, column)
 
             c = roz.dopTable.get(dayPeriodTeach_to_addr(roz, day, period, teachId))
-            # self.ui.label.setToolTip(c.subjInThisLesson[0].name+"\n"+ \
-            #                          c.classInThisLesson[0].name+"\n"+ \
-            #                          c.teacherInThisLesson[0].short)
+
             self.ui.tableWidget.setToolTip(c.subjInThisLesson[0].short+"\n"+ \
                                      c.classInThisLesson[0].short+"\n"+ \
                                      c.teacherInThisLesson[0].short);
