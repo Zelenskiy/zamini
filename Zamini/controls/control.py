@@ -1,5 +1,6 @@
 from PyQt5 import QtCore,  QtWidgets
 from controls.funcRozklad import rowCol_to_dayPeriod, dayPeriodTeach_to_addr
+from PyQt5.QtCore import Qt, QTimer
 
 def testFunc():
     print("Ok_1")
@@ -8,6 +9,16 @@ def testFunc2():
     print("Ok_2")
 
 def cell_clicked(self, roz,row, column):
+    #
+    # def local_button_handler(self):
+    #     print("44444444444444444444444444")
+    #     self.ui.tableWidget.setToolTip("")
+    #     timer.stop()
+
+    #timer = QTimer()
+    #timer.timeout.connect(local_button_handler)
+
+
     # Вилучаємо вміст вибраної комірки
     if self.mode == "edit":
         print("sss  ", end="")
@@ -54,12 +65,17 @@ def cell_clicked(self, roz,row, column):
             day, period, teachId = rowCol_to_dayPeriod (roz, row, column)
 
             c = roz.dopTable.get(dayPeriodTeach_to_addr(roz, day, period, teachId))
-            self.ui.label.setToolTip(c.subjInThisLesson[0].name+"\n"+ \
-                                     c.classInThisLesson[0].name+"\n"+ \
-                                     c.teacherInThisLesson[0].short)
-            self.ui.tableWidget.setToolTip(c.subjInThisLesson[0].name+"\n"+ \
-                                     c.classInThisLesson[0].name+"\n"+ \
+            # self.ui.label.setToolTip(c.subjInThisLesson[0].name+"\n"+ \
+            #                          c.classInThisLesson[0].name+"\n"+ \
+            #                          c.teacherInThisLesson[0].short)
+            self.ui.tableWidget.setToolTip(c.subjInThisLesson[0].short+"\n"+ \
+                                     c.classInThisLesson[0].short+"\n"+ \
                                      c.teacherInThisLesson[0].short);
+
+
+
+            #timer.start(1000)
+
             #print (c.lessonid)
             self.ui.pushButton_4.setText(item.text())
             s = cl.teacherInThisLesson[0].color
@@ -84,6 +100,7 @@ def cell_clicked(self, roz,row, column):
         #self.ui.tableWidget.setMouseTracking(True)
         #self.ui.tableWidget.installEventFilter(self)
         # self.ui.tableWidget.mouseMoveEvent = self.mouseMoveEvent
+
 
 
     """
