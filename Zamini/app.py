@@ -1,5 +1,6 @@
 import sys
 
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from ui.mainform import *
 from controls.init import *
 from controls.control import *
@@ -25,7 +26,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.Dialog = QWidget(self, Qt.Window)
-        list_init(self)
+
 
         self.ui.radioButton.setChecked(True)
 
@@ -33,6 +34,15 @@ class MyWin(QtWidgets.QMainWindow):
         self.oldClass = ""
         #roz.periods_count = 8
 
+        self.roz = Rozklad(r'2019_01_tmp_UTF-8.xml')
+
+        self.roz.periods_count = len(self.roz.periods)
+        self.roz.model = []
+
+        fillTable(self, self.ui.tableWidget, self.ui.radioButton, self.roz)
+        periods_count = len(self.roz.periods)
+
+        list_init(self, self.roz.model)
 
         #Тут описуємо події
         self.ui.pushButton.clicked.connect(self.btn1_Click)
@@ -59,7 +69,7 @@ class MyWin(QtWidgets.QMainWindow):
         return True
 
     def cell_was_clicked(self, row, column):
-        cell_clicked(self, roz, row, column) #Клацнули таблицю розкладу вчителів лівою кн. мишки
+        cell_clicked(self, self.roz, row, column) #Клацнули таблицю розкладу вчителів лівою кн. мишки
 
 
 
@@ -71,8 +81,11 @@ class MyWin(QtWidgets.QMainWindow):
         fillTable(myapp.ui, roz)
 
     def btn1_Click(self):
-        #self.list_show()
-        print("")
+        fruits = ["ddd", "3333", "000"]
+        model = QStandardItemModel()
+        for f in fruits:
+            model.appendRow(QStandardItem(f))
+            self.Dialog.listView.setModel(model)
 
     def btn2_Click(self):
         print("")
@@ -111,12 +124,14 @@ if __name__=="__main__":
 
     #Формуємо класи розкладу
     #roz_osnov = Rozklad(r'2019_01_tmp_UTF-8.xml')   # не змінений розклад
-    roz = Rozklad(r'2019_01_tmp_UTF-8.xml')
-
-    roz.periods_count = len(roz.periods)
-
-    fillTable(myapp.ui, roz)
-    periods_count = len(roz.periods)
+    # roz = Rozklad(r'2019_01_tmp_UTF-8.xml')
+    #
+    # roz.periods_count = len(roz.periods)
+    # roz.model = []
+    #
+    #
+    # fillTable(myapp.ui, roz)
+    # periods_count = len(roz.periods)
 
 
     #print(addr_to_card( roz, "R4C4"))

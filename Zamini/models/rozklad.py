@@ -15,6 +15,7 @@ class Rozklad(object):
         self.dopTable ={}
         self.periods_count=0
         oldCard = None
+        model = []
 
 
 

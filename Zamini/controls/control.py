@@ -36,21 +36,20 @@ def cell_clicked(self, roz,row, column):
             #del roz.dopTable[adr]
         print(k)
         kl = QtWidgets.QTableWidgetItem(self.oldClass)
-
+        #
         self.ui.tableWidget.setItem(row, column, kl)
         #   записуємо до комірки низ зписку
-        if self.Dialog.listWidget.count() == 0:
-            ss = self.Dialog.listWidget.currentRow()
-            if ss != -1:
-                kl = QtWidgets.QTableWidgetItem(ss)
-                self.ui.tableWidget.setItem(row, column, kl)
+        # if self.Dialog.listView.count() == 0:
+        #     ss = self.Dialog.listView.currentRow()
+        #     if ss != -1:
+        #         kl = QtWidgets.QTableWidgetItem(ss)
+        #         self.ui.tableWidget.setItem(row, column, kl)
 
-                # !!!!!!!!!!!
 
         #   записуємо вилучене до низу списку
         if k != "":
             item = QtWidgets.QListWidgetItem(k)
-            self.Dialog.listWidget.addItem(item)
+            # self.Dialog.listWidget.addItem(item)
             #TODO
             self.oldClass = item.text()
             #Запишемо на нове місце дану карточку
