@@ -8,6 +8,7 @@ def testFunc():
 def testFunc2():
     print("Ok_2")
 
+
 def cell_clicked(self, roz,row, column):
     #
     # def local_button_handler(self):

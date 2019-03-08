@@ -66,6 +66,7 @@ def Build(fileName):
                 lessons.append(d0)
 
 
+
         elif child.tag == "cards":
             for d in child: #lessonid,day,period,classroomids
                 d0 = rcrd.Card( d.get("lessonid"), d.get("day"),d.get("period"),d.get("classroomids"))
