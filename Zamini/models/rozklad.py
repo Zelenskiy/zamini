@@ -15,15 +15,8 @@ class Rozklad(object):
         self.dopTable ={}
         self.periods_count=0
         oldCard = None
-        """
-        rowCount = len(teachers)
-        colCount = (len(days)+1)* len(periods)
-        for r in range(0, rowCount):
-            d = []
-            for c in range(0, colCount):
-                d.append(0)
-            self.dopTable.append(d)
-        """
+
+
 
 
         #clas_s, teach_s, subj_s, classr_s, group_s = r.getForCard(cards, "0", "7", "1")

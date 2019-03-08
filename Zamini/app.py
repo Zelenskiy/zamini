@@ -109,10 +109,15 @@ if __name__=="__main__":
     myapp = MyWin()
 
     #Формуємо класи розкладу
+    #roz_osnov = Rozklad(r'2019_01_tmp_UTF-8.xml')   # не змінений розклад
     roz = Rozklad(r'2019_01_tmp_UTF-8.xml')
+
     roz.periods_count = len(roz.periods)
+
     fillTable(myapp.ui, roz)
     periods_count = len(roz.periods)
+
+
     #print(addr_to_card( roz, "R4C4"))
     #print(addr_to_dayPeriodTeach(roz, "R4C4"))
     myapp.show()

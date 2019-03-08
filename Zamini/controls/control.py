@@ -31,8 +31,8 @@ def cell_clicked(self, roz,row, column):
             k = k.text()
             adr = rowCol_to_addr(roz, row, column)
 
-            tmpCard = getForCard(roz, day, period, teachId, weeks)
-            del roz.dopTable[adr]
+            #tmpCard = getForCard(roz, day, period, teachId, weeks)
+            #del roz.dopTable[adr]
         print(k)
         kl = QtWidgets.QTableWidgetItem(self.oldClass)
 
