@@ -1,4 +1,5 @@
 from PyQt5 import QtCore,  QtWidgets
+from PyQt5.QtGui import QStandardItem
 from controls.funcRozklad import rowCol_to_dayPeriod, dayPeriodTeach_to_addr, rowCol_to_addr, addr_to_dayPeriodTeach, getForCard
 from PyQt5.QtCore import Qt, QTimer
 
@@ -36,6 +37,7 @@ def cell_clicked(self, roz,row, column):
             #del roz.dopTable[adr]
         print(k)
         kl = QtWidgets.QTableWidgetItem(self.oldClass)
+        roz.model.appendRow(QStandardItem(k))
         #
         self.ui.tableWidget.setItem(row, column, kl)
         #   записуємо до комірки низ зписку
