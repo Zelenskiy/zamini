@@ -17,12 +17,18 @@ def cell_clicked(self, roz, row, column):
         #self.roz.lv_index = (roz.model.rowCount()) - 1
 
         # Записуємо значення комірки до тимчасової змінної
+        # TODO
+
+
         tmp = self.ui.tableWidget.item(row, column)
         if tmp == None:
             tmp = ""
         else:
             tmp = tmp.text()
         # Записуємо до комірки значення зі списку
+        # TODO
+
+        self.ui.pushButton_4.setText(tmp)
         if roz.lv_index > -1:
             # if self.Dialog.listView.model().item(self.roz.lv_index) == None:
 
@@ -32,11 +38,16 @@ def cell_clicked(self, roz, row, column):
         self.ui.tableWidget.setItem(row, column, kl)
         # Вилучаємо зі списку зчитане значення
         roz.model.removeRow(self.roz.lv_index)
+
         if self.roz.lv_index > roz.model.rowCount()-1:
             self.roz.lv_index = roz.model.rowCount() - 1
+        if self.roz.lv_index > -1:
+            tmp2 = self.Dialog.listView.model().item(self.roz.lv_index).text()
+            self.ui.pushButton_4.setText(tmp2)
         # Записуємо до списку значення, яке на початку було в комірці
         if tmp != "":
             roz.model.appendRow(QStandardItem(tmp))
+
             self.roz.lv_index = (roz.model.rowCount()) - 1
         if roz.model.rowCount() > 0:
             QApplication.setOverrideCursor(Qt.DragMoveCursor)

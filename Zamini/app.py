@@ -69,6 +69,7 @@ class MyWin(QtWidgets.QMainWindow):
         if event.key() == QtCore.Qt.Key_Escape:
             print("pressed key " + str(event.key()))
             self.roz.lv_index = -1
+            self.ui.pushButton_4.setText("")
             QApplication.setOverrideCursor(Qt.ArrowCursor)
 
     def cellHover (self, row, column):
@@ -78,6 +79,8 @@ class MyWin(QtWidgets.QMainWindow):
     def list_click (self):
         # Запам'ятовуємо номер вибраного рядка
         self.roz.lv_index = self.Dialog.listView.selectedIndexes()[0].row()
+        self.ui.pushButton_4.setText(self.Dialog.listView.model().item(self.roz.lv_index).text())
+        #self.ui.pushButton_4.setText("")
         # print ("======================== ", self.roz.lv_index)
 
 
