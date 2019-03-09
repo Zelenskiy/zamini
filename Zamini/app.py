@@ -126,16 +126,18 @@ class MyWin(QtWidgets.QMainWindow):
         print("----")
 
     def btn4_Click(self):
-
-        self.ui.pushButton_4.setStyleSheet("font-weight: bold; background-color:yellow;")
-        self.mode = "edit"
-        self.Dialog.setGeometry(myapp.pos().x()+myapp.width()+5, myapp.pos().y()+27,300,myapp.height())
-        # item = QtWidgets.QListWidgetItem(self.ui.pushButton_4.text())
-        # self.Dialog.listWidget.addItem(item)
-        # self.Dialog.listWidget.currentRow = 0
+        if  self.mode != "edit":
+            self.ui.pushButton_4.setStyleSheet("font-weight: bold; background-color:yellow;")
+            self.mode = "edit"
+            self.Dialog.setGeometry(myapp.pos().x()+myapp.width()+5, myapp.pos().y()+27,300,myapp.height())
+            # item = QtWidgets.QListWidgetItem(self.ui.pushButton_4.text())
+            # self.Dialog.listWidget.addItem(item)
+            # self.Dialog.listWidget.currentRow = 0
+        else:
+            self.mode = "view"
 
         self.list_show()
-        print("44444")
+
 
     def list_show(self):
         self.Dialog.show()

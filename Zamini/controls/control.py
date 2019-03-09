@@ -1,5 +1,6 @@
 from PyQt5 import QtCore,  QtWidgets
 from PyQt5.QtGui import QStandardItem
+from PyQt5.QtWidgets import QApplication
 from controls.funcRozklad import rowCol_to_dayPeriod, dayPeriodTeach_to_addr, rowCol_to_addr, addr_to_dayPeriodTeach, getForCard
 from PyQt5.QtCore import Qt, QTimer
 
@@ -10,18 +11,8 @@ def testFunc2():
     print("Ok_2")
 
 
-def cell_clicked(self, roz,row, column):
-    #
-    # def local_button_handler(self):
-    #     print("44444444444444444444444444")
-    #     self.ui.tableWidget.setToolTip("")
-    #     timer.stop()
+def cell_clicked(self, roz, row, column):
 
-    #timer = QTimer()
-    #timer.timeout.connect(local_button_handler)
-
-
-    # Вилучаємо вміст вибраної комірки
     if self.mode == "edit":
         self.roz.lv_index = (roz.model.rowCount()) - 1
 
@@ -40,8 +31,16 @@ def cell_clicked(self, roz,row, column):
         # Вилучаємо зі списку зчитане значення
         roz.model.removeRow(self.roz.lv_index)
         # Записуємо до списку значення, яке на початку було в комірці
-        roz.model.appendRow(QStandardItem(tmp))
-        self.roz.lv_index = (roz.model.rowCount()) - 1
+        if tmp != "":
+            roz.model.appendRow(QStandardItem(tmp))
+            self.roz.lv_index = (roz.model.rowCount()) - 1
+        if roz.model.rowCount() > 0:
+            QApplication.setOverrideCursor(Qt.DragCopyCursor)
+            # QApplication.restoreOverrideCursor()
+        else:
+
+            QApplication.setOverrideCursor(Qt.ArrowCursor)
+            # QApplication.restoreOverrideCursor()
 
 
 
