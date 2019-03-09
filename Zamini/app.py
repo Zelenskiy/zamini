@@ -47,6 +47,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.roz.model = QStandardItemModel()
         list_init(self, self.roz.model)
         self.Dialog.listView.setModel(self.roz.model)
+        self.ui.tableWidget.setMouseTracking(True)
 
         #Тут описуємо події
         self.ui.pushButton.clicked.connect(self.btn1_Click)
@@ -56,15 +57,19 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.radioButton.clicked.connect(self.radioButton_Click)
         self.ui.radioButton_2.clicked.connect(self.radioButton_Click)
 
-        self.ui.tableWidget.setMouseTracking(True)
-
         self.ui.tableWidget.cellClicked.connect(self.cell_was_clicked)
-
         self.Dialog.listView.clicked.connect(self.list_click)
+
 
         #self.Dialog.listView.itemClicked.connect(self.item_clicked)
 
         #self.ui.tableWidget.cellEntered.connect(self.cellHover)
+
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Escape:
+            print("pressed key " + str(event.key()))
+            self.roz.lv_index = -1
+            QApplication.setOverrideCursor(Qt.ArrowCursor)
 
     def cellHover (self, row, column):
         print ("========================")
@@ -135,7 +140,7 @@ class MyWin(QtWidgets.QMainWindow):
             # self.Dialog.listWidget.currentRow = 0
         else:
             self.mode = "view"
-
+        self.roz.lv_index = (self.roz.model.rowCount()) - 1
         self.list_show()
 
 
