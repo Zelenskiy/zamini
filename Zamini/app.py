@@ -1,6 +1,6 @@
 import sys
 
-from PyQt5.QtGui import QStandardItemModel, QStandardItem
+from PyQt5.QtGui import QStandardItemModel, QStandardItem, QColor
 from ui.mainform import *
 from controls.init import *
 from controls.control import *
@@ -27,7 +27,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.Dialog = QWidget(self, Qt.Window)
-
+        self.whatEverColor = QColor(Qt.white)
 
         self.ui.radioButton.setChecked(True)
 

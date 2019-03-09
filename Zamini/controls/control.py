@@ -1,8 +1,9 @@
-from PyQt5 import QtCore,  QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtGui import QStandardItem
 from PyQt5.QtWidgets import QApplication
 from controls.funcRozklad import rowCol_to_dayPeriod, dayPeriodTeach_to_addr, rowCol_to_addr, addr_to_dayPeriodTeach, getForCard
 from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtGui import QPixmap
 
 def testFunc():
     print("Ok_1")
@@ -30,14 +31,13 @@ def cell_clicked(self, roz, row, column):
 
         self.ui.pushButton_4.setText(tmp)
         if roz.lv_index > -1:
-            # if self.Dialog.listView.model().item(self.roz.lv_index) == None:
-
             kl = QtWidgets.QTableWidgetItem(self.Dialog.listView.model().item(self.roz.lv_index).text())
         else:
             kl = QtWidgets.QTableWidgetItem("")
         self.ui.tableWidget.setItem(row, column, kl)
         # Вилучаємо зі списку зчитане значення
         roz.model.removeRow(self.roz.lv_index)
+
 
         if self.roz.lv_index > roz.model.rowCount()-1:
             self.roz.lv_index = roz.model.rowCount() - 1
@@ -50,7 +50,11 @@ def cell_clicked(self, roz, row, column):
 
             self.roz.lv_index = (roz.model.rowCount()) - 1
         if roz.model.rowCount() > 0:
-            QApplication.setOverrideCursor(Qt.DragMoveCursor)
+            # QApplication.setOverrideCursor(Qt.BitmapCursor)
+            # bmp =
+
+            self.setCursor(QtGui.QCursor(QtGui.QPixmap("image.bmp"),0,0))
+            # QApplication.setOverrideCursor(Qt.DragMoveCursor)
             # QApplication.restoreOverrideCursor()
         else:
 
