@@ -11,7 +11,8 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QAction,\
                             QWidget, qApp
 
 from PyQt5 import QtCore,  QtWidgets
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QModelIndex
+
 
 #import controls.funcRozklad as fr
 #import models.rozklad as rzkl
@@ -37,16 +38,20 @@ class MyWin(QtWidgets.QMainWindow):
         self.roz = Rozklad(r'2019_01_tmp_UTF-8.xml')
 
         self.roz.periods_count = len(self.roz.periods)
-        self.roz.model = []
+
 
         fillTable(self, self.ui.tableWidget, self.ui.radioButton, self.roz)
         periods_count = len(self.roz.periods)
 
+
+        self.roz.model = QStandardItemModel()
         list_init(self, self.roz.model)
+        self.Dialog.listView.setModel(self.roz.model)
 
         #Тут описуємо події
         self.ui.pushButton.clicked.connect(self.btn1_Click)
         self.ui.pushButton_2.clicked.connect(self.btn2_Click)
+        self.ui.pushButton_3.clicked.connect(self.btn3_Click)
         self.ui.pushButton_4.clicked.connect(self.btn4_Click)
         self.ui.radioButton.clicked.connect(self.radioButton_Click)
         self.ui.radioButton_2.clicked.connect(self.radioButton_Click)
@@ -82,13 +87,20 @@ class MyWin(QtWidgets.QMainWindow):
 
     def btn1_Click(self):
         fruits = ["ddd", "3333", "000"]
-        model = QStandardItemModel()
+        #model = QStandardItemModel()
         for f in fruits:
-            model.appendRow(QStandardItem(f))
-            self.Dialog.listView.setModel(model)
+            self.roz.model.appendRow(QStandardItem(f))
+
 
     def btn2_Click(self):
-        print("")
+        self.roz.model.appendRow(QStandardItem("aaaaaaaaaaa"))   # Працює
+
+    def btn3_Click(self):
+        if self.Dialog.listView.model().rowCount() > 0:
+            print("Вибрано елемент: ", self.Dialog.listView.selectedIndexes()[0].row())  # Працює
+            print(self.Dialog.listView.model().item(0).text())  # Працює
+            self.Dialog.listView.model().removeRows(0 , 1)  # Працює
+
 
     def item_clicked(item):
         #n = item.text()
