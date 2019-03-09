@@ -59,11 +59,22 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.tableWidget.setMouseTracking(True)
 
         self.ui.tableWidget.cellClicked.connect(self.cell_was_clicked)
+
+        self.Dialog.listView.clicked.connect(self.list_click)
+
+        #self.Dialog.listView.itemClicked.connect(self.item_clicked)
+
         #self.ui.tableWidget.cellEntered.connect(self.cellHover)
 
     def cellHover (self, row, column):
         print ("========================")
         self.ui.tableWidget.setToolTip("")
+
+    def list_click (self):
+        # Запам'ятовуємо номер вибраного рядка
+        self.roz.lv_index = self.Dialog.listView.selectedIndexes()[0].row()
+        # print ("======================== ", self.roz.lv_index)
+
 
 
     def eventFilter(self, source, event):
@@ -93,7 +104,12 @@ class MyWin(QtWidgets.QMainWindow):
 
 
     def btn2_Click(self):
-        self.roz.model.appendRow(QStandardItem("aaaaaaaaaaa"))   # Працює
+        # if len(self.roz.model) > 0:
+
+        # index = QModelIndex (self.Dialog.listView.index(0))
+        self.Dialog.listView.setCurrentIndex(0)
+        # self.roz.model.appendRow(QStandardItem("aaaaaaaaaaa"))   # Працює
+
 
     def btn3_Click(self):
         if self.Dialog.listView.model().rowCount() > 0:

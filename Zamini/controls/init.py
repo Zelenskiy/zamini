@@ -26,6 +26,6 @@ def list_init(self, model):
     self.Dialog.pushButton_2.setObjectName("pushButton_2")
     self.Dialog.horizontalLayout.addWidget(self.Dialog.pushButton_2)
     self.Dialog.verticalLayout.addLayout(self.Dialog.horizontalLayout)
-    # self.Dialog.listView.itemClicked.connect(self.item_clicked)
+
     self.Dialog.pushButton.setText("1")
     self.Dialog.pushButton_2.setText("2")

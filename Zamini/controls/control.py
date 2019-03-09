@@ -23,6 +23,30 @@ def cell_clicked(self, roz,row, column):
 
     # Вилучаємо вміст вибраної комірки
     if self.mode == "edit":
+        self.roz.lv_index = (roz.model.rowCount()) - 1
+
+        # Записуємо значення комірки до тимчасової змінної
+        tmp = self.ui.tableWidget.item(row, column)
+        if tmp == None:
+            tmp = ""
+        else:
+            tmp = tmp.text()
+        # Записуємо до комірки значення зі списку
+        if self.roz.lv_index > -1:
+            kl = QtWidgets.QTableWidgetItem(self.Dialog.listView.model().item(self.roz.lv_index).text())
+        else:
+            kl = QtWidgets.QTableWidgetItem("")
+        self.ui.tableWidget.setItem(row, column, kl)
+        # Вилучаємо зі списку зчитане значення
+        roz.model.removeRow(self.roz.lv_index)
+        # Записуємо до списку значення, яке на початку було в комірці
+        roz.model.appendRow(QStandardItem(tmp))
+        self.roz.lv_index = (roz.model.rowCount()) - 1
+
+
+
+
+        """
         print("sss  ", end="")
         #
         #   вилучаємо вміст
@@ -36,10 +60,25 @@ def cell_clicked(self, roz,row, column):
             #tmpCard = getForCard(roz, day, period, teachId, weeks)
             #del roz.dopTable[adr]
         print(k)
-        kl = QtWidgets.QTableWidgetItem(self.oldClass)
-        roz.model.appendRow(QStandardItem(k))
+
+        if k != "":
+            pass
+            roz.model.appendRow(QStandardItem(k))
+            self.roz.lv_index = (roz.model.rowCount())-1    #ПРацює
+        else:
+            pass
+
+
+
         #
-        self.ui.tableWidget.setItem(row, column, kl)
+        if self.roz.lv_index > -1:
+            kl = QtWidgets.QTableWidgetItem(self.Dialog.listView.model().item(self.roz.lv_index).text())
+            #kl = QtWidgets.QTableWidgetItem(self.oldClass)
+            self.ui.tableWidget.setItem(row, column, kl)
+            roz.model.appendRow(QStandardItem(k))
+            self.roz.lv_index = (roz.model.rowCount()) - 1  # ПРацює
+        else:
+            pass
         #   записуємо до комірки низ зписку
         # if self.Dialog.listView.count() == 0:
         #     ss = self.Dialog.listView.currentRow()
@@ -66,7 +105,7 @@ def cell_clicked(self, roz,row, column):
 
         else:
             self.oldClass = ""
-
+        """
     else:
         print("Row %d and Column %d was clicked" % (row, column))
         r, g, b = 255, 255, 255
