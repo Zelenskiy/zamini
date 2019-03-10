@@ -27,12 +27,23 @@ class Ui_MainWindow(object):
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
+
         self.tableWidget = QtWidgets.QTableWidget(self.scrollAreaWidgetContents)
         self.tableWidget.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.tableWidget.setRowCount(3)
         self.tableWidget.setColumnCount(5)
         self.tableWidget.setObjectName("tableWidget")
         self.verticalLayout_2.addWidget(self.tableWidget)
+
+        self.tableWidget2 = QtWidgets.QTableWidget(self.scrollAreaWidgetContents)
+        self.tableWidget2.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.tableWidget2.setRowCount(3)
+        self.tableWidget2.setColumnCount(5)
+        self.tableWidget2.setObjectName("tableWidget2")
+        self.verticalLayout_2.addWidget(self.tableWidget2)
+
+
+
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.verticalLayout.addWidget(self.scrollArea)
         self.gridLayout_2 = QtWidgets.QGridLayout()

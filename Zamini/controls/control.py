@@ -55,6 +55,7 @@ def cell_clicked(self, roz, row, column):
                         self.boxCards.append(c)
 
 
+
         # Вилучаємо зі списку зчитане значення
         roz.model.removeRow(self.roz.lv_index)
 
