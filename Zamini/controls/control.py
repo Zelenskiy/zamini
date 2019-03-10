@@ -50,8 +50,8 @@ def cell_clicked(self, roz, row, column):
                         c = roz.dopTable[rowCol_to_addr(roz, r, column)]
                         del roz.dopTable[rowCol_to_addr(roz, r, column)]
                         self.boxCards.append(c)
-                        print ("model.rowCount  = ", roz.model.rowCount()," ", end="")
-                        print ("roz.boxCards  = ", len(self.boxCards))
+                        # print ("model.rowCount  = ", roz.model.rowCount()," ", end="")
+                        # print ("roz.boxCards  = ", len(self.boxCards))
                         self.boxCards.append(c)
 
 
@@ -70,8 +70,8 @@ def cell_clicked(self, roz, row, column):
             c = roz.dopTable[rowCol_to_addr(roz, row, column)]
             del roz.dopTable[rowCol_to_addr(roz, row, column)]
             self.boxCards.append(c)
-            print("model.rowCount  = ", roz.model.rowCount(), " ", end="")
-            print("roz.boxCards  = ", len(self.boxCards))
+            # print("model.rowCount  = ", roz.model.rowCount(), " ", end="")
+            # print("roz.boxCards  = ", len(self.boxCards))
             self.boxCards.append(c)
             self.roz.lv_index = (roz.model.rowCount()) - 1
         if roz.model.rowCount() > 0:
