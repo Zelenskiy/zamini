@@ -12,6 +12,8 @@ def testFunc2():
     print("Ok_2")
 
 
+
+
 def cell_clicked(self, roz, row, column):
 
     if self.mode == "edit":
@@ -19,7 +21,7 @@ def cell_clicked(self, roz, row, column):
 
         # Записуємо значення комірки до тимчасової змінної
         # TODO
-
+        #adrTmpRC = rowCol_to_addr(roz, row, column)
 
         tmp = self.ui.tableWidget.item(row, column)
         if tmp == None:
@@ -35,6 +37,16 @@ def cell_clicked(self, roz, row, column):
         else:
             kl = QtWidgets.QTableWidgetItem("")
         self.ui.tableWidget.setItem(row, column, kl)
+        #           проходимо по стовпчику і вилучаємо картки з даним класом до списку
+        for r in range(0,len(roz.teachers)-1):
+            if tmp != "":
+                if self.ui.tableWidget.item(r, column) != None:
+                    if self.ui.tableWidget.item(r, column).text() == tmp:
+                        kl = QtWidgets.QTableWidgetItem("")
+                        self.ui.tableWidget.setItem(r, column, kl)
+                        roz.model.appendRow(QStandardItem(tmp))
+
+
         # Вилучаємо зі списку зчитане значення
         roz.model.removeRow(self.roz.lv_index)
 
@@ -53,8 +65,8 @@ def cell_clicked(self, roz, row, column):
             # QApplication.setOverrideCursor(Qt.BitmapCursor)
             # bmp =
 
-            self.setCursor(QtGui.QCursor(QtGui.QPixmap("image.bmp"),0,0))
-            # QApplication.setOverrideCursor(Qt.DragMoveCursor)
+            # self.setCursor(QtGui.QCursor(QtGui.QPixmap("image.bmp"),0,0))
+            QApplication.setOverrideCursor(Qt.DragMoveCursor)
             # QApplication.restoreOverrideCursor()
         else:
 
