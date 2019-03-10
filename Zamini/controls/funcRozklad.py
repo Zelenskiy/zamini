@@ -112,14 +112,14 @@ def fillTable(self, ui, radioButton, roz):
             continue
         if (radioButton.isChecked() == False) and (w == "10"):
             continue
-        for t in c.teacherInThisLesson:
+        for t in c.lesson.teacherInThisLesson:
             row = int(t.id[1:]) - 1
             ss = ""
-            for cc in c.classInThisLesson:
+            for cc in c.lesson.classInThisLesson:
                 ss += cc.short
             kl = QtWidgets.QTableWidgetItem(ss)
             ui.tableWidget.setItem(row, col, kl)
-            ui.tableWidget2.setItem(row, col, QtWidgets.QTableWidgetItem(str(cc.id)))
+            ui.tableWidget2.setItem(row, col, QtWidgets.QTableWidgetItem(c.id))
             s = t.color
             r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
             ui.tableWidget.item(row, col).setBackground(QtGui.QColor(r, g, b))

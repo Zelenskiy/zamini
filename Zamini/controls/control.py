@@ -108,7 +108,7 @@ def cell_clicked(self, roz, row, column):
         if item != None:
             cl = id_to_card(roz, item.text())
             ls = ""
-            for s in cl.subjInThisLesson:
+            for s in cl.lesson.subjInThisLesson:
                 ls = ls + s.name
             self.ui.label.setText(ls)
 
@@ -116,9 +116,9 @@ def cell_clicked(self, roz, row, column):
 
             #c = roz.dopTable.get(dayPeriodTeach_to_addr(roz, day, period, teachId))
 
-            self.ui.tableWidget.setToolTip(cl.subjInThisLesson[0].short+"\n"+ \
-                                     cl.classInThisLesson[0].short+"\n"+ \
-                                     cl.teacherInThisLesson[0].short);
+            self.ui.tableWidget.setToolTip(cl.lesson.subjInThisLesson[0].short+"\n"+ \
+                                     cl.lesson.classInThisLesson[0].short+"\n"+ \
+                                     cl.lesson.teacherInThisLesson[0].short);
 
 
 
@@ -126,7 +126,7 @@ def cell_clicked(self, roz, row, column):
 
             #print (c.lessonid)
             self.ui.pushButton_4.setText(item.text())
-            s = cl.teacherInThisLesson[0].color
+            s = cl.lesson.teacherInThisLesson[0].color
             r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
         else:
             self.ui.pushButton_4.setText("")

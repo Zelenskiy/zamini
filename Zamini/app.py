@@ -87,8 +87,8 @@ class MyWin(QtWidgets.QMainWindow):
         kl[1] = kl[1].rstrip()
         id = kl[1]
         card = id_to_card(self.roz, id)
-        s = card.subjInThisLesson[0].short+"; " + \
-            card.teacherInThisLesson[0].short
+        s = card.lesson.subjInThisLesson[0].short+"; " + \
+            card.lesson.teacherInThisLesson[0].short
         self.Dialog.listView.setToolTip(s)
 
         self.ui.pushButton_4.setText(kl[0])

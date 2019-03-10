@@ -6,11 +6,12 @@ class Card(object):
         self.period=period
         self.classroomids=classroomids
 
-        self.teacherInThisLesson = []
-        self.classInThisLesson = []
-        self.subjInThisLesson = []
-        self.groupInThisLesson = []
-        self.classroomsInThisLesson = []
+        # self.teacherInThisLesson = []
+        # self.classInThisLesson = []
+        # self.subjInThisLesson = []
+        # self.groupInThisLesson = []
+        # self.classroomsInThisLesson = []
+        self.lesson = []
 
 
     def setFields(self,lessons,days,periods):
