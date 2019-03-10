@@ -24,35 +24,47 @@ def cell_clicked(self, roz, row, column):
         #adrTmpRC = rowCol_to_addr(roz, row, column)
 
         tmp = self.ui.tableWidget.item(row, column)
+        tmp2 = self.ui.tableWidget2.item(row, column)
         if tmp == None:
             tmp = ""
+            tmp2 = ""
         else:
             tmp = tmp.text()
+            tmp2 = tmp2.text()
+
         # Записуємо до комірки значення зі списку
         # TODO
 
         self.ui.pushButton_4.setText(tmp)
+        kl = ["", ""]
         if roz.lv_index > -1:
-            kl = QtWidgets.QTableWidgetItem(self.Dialog.listView.model().item(self.roz.lv_index).text())
+            klAll = QtWidgets.QTableWidgetItem(self.Dialog.listView.model().item(self.roz.lv_index).text())
+            klAll = klAll.text()
+            kl = klAll.split("&")
+            kl[0] = QtWidgets.QTableWidgetItem(kl[0].strip())
+            kl[1] = QtWidgets.QTableWidgetItem(kl[1].strip())
         else:
-            kl = QtWidgets.QTableWidgetItem("")
-        self.ui.tableWidget.setItem(row, column, kl)
+            kl[0] = QtWidgets.QTableWidgetItem("")
+            kl[1] = QtWidgets.QTableWidgetItem("")
+        self.ui.tableWidget.setItem(row, column, kl[0])
+        self.ui.tableWidget2.setItem(row, column, kl[1])
 
 
         #           проходимо по стовпчику і вилучаємо картки з даним класом до списку
-        for r in range(0,len(roz.teachers)-1):
-            if tmp != "":
-                if self.ui.tableWidget.item(r, column) != None:
-                    if self.ui.tableWidget.item(r, column).text() == tmp:
-                        kl = QtWidgets.QTableWidgetItem("")
-                        self.ui.tableWidget.setItem(r, column, kl)
-                        roz.model.appendRow(QStandardItem(tmp))
-                        c = roz.dopTable[rowCol_to_addr(roz, r, column)]
-                        del roz.dopTable[rowCol_to_addr(roz, r, column)]
-                        self.boxCards.append(c)
-                        # print ("model.rowCount  = ", roz.model.rowCount()," ", end="")
-                        # print ("roz.boxCards  = ", len(self.boxCards))
-                        self.boxCards.append(c)
+
+
+
+        # for r in range(0,len(roz.teachers)-1):
+        #     if tmp != "":
+        #         if self.ui.tableWidget.item(r, column) != None:
+        #             if self.ui.tableWidget.item(r, column).text() == tmp:
+        #                 kl = QtWidgets.QTableWidgetItem("")
+        #                 self.ui.tableWidget.setItem(r, column, kl)
+        #                 roz.model.appendRow(QStandardItem(tmp))
+        #                 c = roz.dopTable[rowCol_to_addr(roz, r, column)]
+        #                 del roz.dopTable[rowCol_to_addr(roz, r, column)]
+        #                 self.boxCards.append(c)
+        #                 self.boxCards.append(c)
 
 
 
@@ -67,13 +79,11 @@ def cell_clicked(self, roz, row, column):
             self.ui.pushButton_4.setText(tmp2)
         # Записуємо до списку значення, яке на початку було в комірці
         if tmp != "":
-            roz.model.appendRow(QStandardItem(tmp))
-            c = roz.dopTable[rowCol_to_addr(roz, row, column)]
-            del roz.dopTable[rowCol_to_addr(roz, row, column)]
-            self.boxCards.append(c)
-            # print("model.rowCount  = ", roz.model.rowCount(), " ", end="")
-            # print("roz.boxCards  = ", len(self.boxCards))
-            self.boxCards.append(c)
+            roz.model.appendRow(QStandardItem(tmp+"                        &"+tmp2))
+            # c = roz.dopTable[rowCol_to_addr(roz, row, column)]
+            # del roz.dopTable[rowCol_to_addr(roz, row, column)]
+            # self.boxCards.append(c)
+            # self.boxCards.append(c)
             self.roz.lv_index = (roz.model.rowCount()) - 1
         if roz.model.rowCount() > 0:
             # QApplication.setOverrideCursor(Qt.BitmapCursor)

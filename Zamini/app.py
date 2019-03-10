@@ -41,7 +41,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.roz.periods_count = len(self.roz.periods)
 
 
-        fillTable(self, self.ui.tableWidget, self.ui.radioButton, self.roz)
+        fillTable(self, self.ui, self.ui.radioButton, self.roz)
         periods_count = len(self.roz.periods)
 
 
@@ -100,16 +100,14 @@ class MyWin(QtWidgets.QMainWindow):
 
 
     def radioButton_Click(self):
-        fillTable(myapp.ui, roz)
+        fillTable(self, self.ui, self.ui.radioButton, self.roz)
 
     def radioButton_2_Click(self):
-        fillTable(myapp.ui, roz)
+        fillTable(self, self.ui, self.ui.radioButton, self.roz)
 
     def btn1_Click(self):
-        fruits = ["ddd", "3333", "000"]
-        #model = QStandardItemModel()
-        for f in fruits:
-            self.roz.model.appendRow(QStandardItem(f))
+        self.ui.tableWidget2.setVisible(not self.ui.tableWidget2.isVisible())
+
 
 
     def btn2_Click(self):

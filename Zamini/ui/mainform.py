@@ -41,7 +41,7 @@ class Ui_MainWindow(object):
         self.tableWidget2.setColumnCount(5)
         self.tableWidget2.setObjectName("tableWidget2")
         self.verticalLayout_2.addWidget(self.tableWidget2)
-
+        self.tableWidget2.setVisible(False)
 
 
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)

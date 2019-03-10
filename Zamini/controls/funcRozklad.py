@@ -70,16 +70,21 @@ def addr_to_card(roz, adr):
     print(adr)
     return len(roz.cards)
 
-def fillTable(self, tableWidget, radioButton, roz):
+def fillTable(self, ui, radioButton, roz):
     # Заповнення таблиці
-    tableWidget.setColumnCount(0)
-    tableWidget.setRowCount(0)
+    ui.tableWidget.setColumnCount(0)
+    ui.tableWidget.setRowCount(0)
+    ui.tableWidget2.setColumnCount(0)
+    ui.tableWidget2.setRowCount(0)
     roz.dopTable = {}
-    tableWidget.setColumnCount(len(roz.days) * len(roz.periods))
-    tableWidget.setRowCount(len(roz.teachers))
+    ui.tableWidget.setColumnCount(len(roz.days) * len(roz.periods))
+    ui.tableWidget.setRowCount(len(roz.teachers))
+    ui.tableWidget2.setColumnCount(len(roz.days) * len(roz.periods))
+    ui.tableWidget2.setRowCount(len(roz.teachers))
 
     for col in range(0, len(roz.days) * len(roz.periods) + 1):
-        tableWidget.setColumnWidth(col, 40)
+        ui.tableWidget.setColumnWidth(col, 40)
+        ui.tableWidget2.setColumnWidth(col, 40)
     labelHor = []
     for d in roz.days:
         for p in roz.periods:
@@ -89,11 +94,13 @@ def fillTable(self, tableWidget, radioButton, roz):
                 tt = ""
             labelHor.append(tt + "\n" + p.period)
 
-        tableWidget.setHorizontalHeaderLabels(labelHor)
+            ui.tableWidget.setHorizontalHeaderLabels(labelHor)
+            ui.tableWidget2.setHorizontalHeaderLabels(labelHor)
     labelVert = []
     for t in roz.teachers:
         labelVert.append(t.short)
-        tableWidget.setVerticalHeaderLabels(labelVert)
+        ui.tableWidget.setVerticalHeaderLabels(labelVert)
+        ui.tableWidget2.setVerticalHeaderLabels(labelVert)
     for c in roz.cards:
         col = len(roz.periods) * int(c.day) + int(c.period) - 1
         w = c.weeks
@@ -107,10 +114,11 @@ def fillTable(self, tableWidget, radioButton, roz):
             for cc in c.classInThisLesson:
                 ss += cc.short
             kl = QtWidgets.QTableWidgetItem(ss)
-            tableWidget.setItem(row, col, kl)
+            ui.tableWidget.setItem(row, col, kl)
+            ui.tableWidget2.setItem(row, col, QtWidgets.QTableWidgetItem(str(cc.id)))
             s = t.color
             r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
-            tableWidget.item(row, col).setBackground(QtGui.QColor(r, g, b))
+            ui.tableWidget.item(row, col).setBackground(QtGui.QColor(r, g, b))
             #roz.dopTable[row][col] = c
             roz.dopTable["R"+str(row)+"C"+str(col)] = c
 
