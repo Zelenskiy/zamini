@@ -68,6 +68,7 @@ def Build(fileName):
 
 
         elif child.tag == "cards":
+            id = 0
             for d in child: #lessonid,day,period,classroomids
                 d0 = rcrd.Card( d.get("lessonid"), d.get("day"),d.get("period"),d.get("classroomids"))
                 d0.setFields(lessons,days,periods)

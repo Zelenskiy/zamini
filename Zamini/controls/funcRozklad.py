@@ -31,7 +31,7 @@ def getForCard(roz, day, period, teach, weeks):
                 for t in c.teacherInThisLesson:
                     if t.id == teach:
                         tFlag = True
-                if ((c.weeks==weeks) or (c.weeks=="1")) and (tFlag):
+                if ((c.weeks == weeks) or (c.weeks == "1")) and (tFlag):
                     return c
     return None
 
@@ -42,6 +42,8 @@ def rowCol_to_dayPeriod(roz, row, col):
     period = col % roz.periods_count + 1
     teachId = "*" + str(row+1)
     return day, period, teachId
+
+
 
 def rowCol_to_addr(roz, row, col):
     day = col // roz.periods_count

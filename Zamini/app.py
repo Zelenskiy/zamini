@@ -33,6 +33,7 @@ class MyWin(QtWidgets.QMainWindow):
 
         self.mode = "view"
         self.oldClass = ""
+        self.boxCards = []
         #roz.periods_count = 8
 
         self.roz = Rozklad(r'2019_01_tmp_UTF-8.xml')

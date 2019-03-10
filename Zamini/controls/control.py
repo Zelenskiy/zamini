@@ -37,6 +37,8 @@ def cell_clicked(self, roz, row, column):
         else:
             kl = QtWidgets.QTableWidgetItem("")
         self.ui.tableWidget.setItem(row, column, kl)
+
+
         #           проходимо по стовпчику і вилучаємо картки з даним класом до списку
         for r in range(0,len(roz.teachers)-1):
             if tmp != "":
@@ -45,6 +47,12 @@ def cell_clicked(self, roz, row, column):
                         kl = QtWidgets.QTableWidgetItem("")
                         self.ui.tableWidget.setItem(r, column, kl)
                         roz.model.appendRow(QStandardItem(tmp))
+                        c = roz.dopTable[rowCol_to_addr(roz, r, column)]
+                        del roz.dopTable[rowCol_to_addr(roz, r, column)]
+                        self.boxCards.append(c)
+                        print ("model.rowCount  = ", roz.model.rowCount()," ", end="")
+                        print ("roz.boxCards  = ", len(self.boxCards))
+                        self.boxCards.append(c)
 
 
         # Вилучаємо зі списку зчитане значення
@@ -59,7 +67,12 @@ def cell_clicked(self, roz, row, column):
         # Записуємо до списку значення, яке на початку було в комірці
         if tmp != "":
             roz.model.appendRow(QStandardItem(tmp))
-
+            c = roz.dopTable[rowCol_to_addr(roz, row, column)]
+            del roz.dopTable[rowCol_to_addr(roz, row, column)]
+            self.boxCards.append(c)
+            print("model.rowCount  = ", roz.model.rowCount(), " ", end="")
+            print("roz.boxCards  = ", len(self.boxCards))
+            self.boxCards.append(c)
             self.roz.lv_index = (roz.model.rowCount()) - 1
         if roz.model.rowCount() > 0:
             # QApplication.setOverrideCursor(Qt.BitmapCursor)

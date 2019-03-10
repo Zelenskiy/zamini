@@ -1,5 +1,6 @@
 class Card(object):
-    def __init__(self,lessonid,day,period,classroomids):
+    def __init__(self,id,lessonid,day,period,classroomids):
+        self.id = id
         self.lessonid=lessonid
         self.day=day
         self.period=period

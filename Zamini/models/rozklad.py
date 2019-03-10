@@ -16,7 +16,7 @@ class Rozklad(object):
         self.periods_count=0
         oldCard = None
         model = []
-        boxCards = []
+        #boxCards = []
         lv_index = -1
 
 
