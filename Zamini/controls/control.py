@@ -1,7 +1,8 @@
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtGui import QStandardItem
 from PyQt5.QtWidgets import QApplication
-from controls.funcRozklad import rowCol_to_dayPeriod, dayPeriodTeach_to_addr, rowCol_to_addr, addr_to_dayPeriodTeach, getForCard
+from controls.funcRozklad import rowCol_to_dayPeriod, dayPeriodTeach_to_addr, \
+    rowCol_to_addr, addr_to_dayPeriodTeach, getForCard, id_to_card
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QPixmap
 
@@ -37,34 +38,40 @@ def cell_clicked(self, roz, row, column):
 
         self.ui.pushButton_4.setText(tmp)
         kl = ["", ""]
+        kli = ["", ""]
         if roz.lv_index > -1:
             klAll = QtWidgets.QTableWidgetItem(self.Dialog.listView.model().item(self.roz.lv_index).text())
             klAll = klAll.text()
             kl = klAll.split("&")
-            kl[0] = QtWidgets.QTableWidgetItem(kl[0].strip())
-            kl[1] = QtWidgets.QTableWidgetItem(kl[1].strip())
+            kl[0] = kl[0].rstrip()
+            kl[1] = kl[1].rstrip()
+
+            kli[0] = QtWidgets.QTableWidgetItem(kl[0])
+            kli[1] = QtWidgets.QTableWidgetItem(kl[1])
         else:
-            kl[0] = QtWidgets.QTableWidgetItem("")
-            kl[1] = QtWidgets.QTableWidgetItem("")
-        self.ui.tableWidget.setItem(row, column, kl[0])
-        self.ui.tableWidget2.setItem(row, column, kl[1])
+            kli[0] = QtWidgets.QTableWidgetItem("")
+            kli[1] = QtWidgets.QTableWidgetItem("")
+        self.ui.tableWidget.setItem(row, column, kli[0])
+        self.ui.tableWidget2.setItem(row, column, kli[1])
 
 
         #           проходимо по стовпчику і вилучаємо картки з даним класом до списку
-
-
-
-        # for r in range(0,len(roz.teachers)-1):
-        #     if tmp != "":
-        #         if self.ui.tableWidget.item(r, column) != None:
-        #             if self.ui.tableWidget.item(r, column).text() == tmp:
-        #                 kl = QtWidgets.QTableWidgetItem("")
-        #                 self.ui.tableWidget.setItem(r, column, kl)
-        #                 roz.model.appendRow(QStandardItem(tmp))
-        #                 c = roz.dopTable[rowCol_to_addr(roz, r, column)]
-        #                 del roz.dopTable[rowCol_to_addr(roz, r, column)]
-        #                 self.boxCards.append(c)
-        #                 self.boxCards.append(c)
+        for r in range(0, len(roz.teachers) - 1):
+            if r == row:
+                continue
+            if kl[0] != "":
+                if self.ui.tableWidget.item(r, column) != None:
+                    s1 = self.ui.tableWidget.item(r, column).text()
+                    if s1.strip() == kl[0].strip():
+                        k_l = self.ui.tableWidget2.item(r, column)
+                        if k_l == None:
+                            k_l = ""
+                        else:
+                            k_l = k_l.text()
+                        roz.model.appendRow(QStandardItem(kl[0]+"                        &"+k_l))
+                        k_l = QtWidgets.QTableWidgetItem("")
+                        self.ui.tableWidget.setItem(r, column, k_l)
+                        self.ui.tableWidget2.setItem(r, column, k_l)
 
 
 
@@ -80,10 +87,6 @@ def cell_clicked(self, roz, row, column):
         # Записуємо до списку значення, яке на початку було в комірці
         if tmp != "":
             roz.model.appendRow(QStandardItem(tmp+"                        &"+tmp2))
-            # c = roz.dopTable[rowCol_to_addr(roz, row, column)]
-            # del roz.dopTable[rowCol_to_addr(roz, row, column)]
-            # self.boxCards.append(c)
-            # self.boxCards.append(c)
             self.roz.lv_index = (roz.model.rowCount()) - 1
         if roz.model.rowCount() > 0:
             # QApplication.setOverrideCursor(Qt.BitmapCursor)
@@ -97,75 +100,13 @@ def cell_clicked(self, roz, row, column):
             QApplication.setOverrideCursor(Qt.ArrowCursor)
             # QApplication.restoreOverrideCursor()
 
-
-
-
-        """
-        print("sss  ", end="")
-        #
-        #   вилучаємо вміст
-        k = self.ui.tableWidget.item(row, column)
-        if k == None:
-            k = ""
-        else:
-            k = k.text()
-            adr = rowCol_to_addr(roz, row, column)
-
-            #tmpCard = getForCard(roz, day, period, teachId, weeks)
-            #del roz.dopTable[adr]
-        print(k)
-
-        if k != "":
-            pass
-            roz.model.appendRow(QStandardItem(k))
-            self.roz.lv_index = (roz.model.rowCount())-1    #ПРацює
-        else:
-            pass
-
-
-
-        #
-        if self.roz.lv_index > -1:
-            kl = QtWidgets.QTableWidgetItem(self.Dialog.listView.model().item(self.roz.lv_index).text())
-            #kl = QtWidgets.QTableWidgetItem(self.oldClass)
-            self.ui.tableWidget.setItem(row, column, kl)
-            roz.model.appendRow(QStandardItem(k))
-            self.roz.lv_index = (roz.model.rowCount()) - 1  # ПРацює
-        else:
-            pass
-        #   записуємо до комірки низ зписку
-        # if self.Dialog.listView.count() == 0:
-        #     ss = self.Dialog.listView.currentRow()
-        #     if ss != -1:
-        #         kl = QtWidgets.QTableWidgetItem(ss)
-        #         self.ui.tableWidget.setItem(row, column, kl)
-
-
-        #   записуємо вилучене до низу списку
-        if k != "":
-            item = QtWidgets.QListWidgetItem(k)
-            # self.Dialog.listWidget.addItem(item)
-            #TODO
-            self.oldClass = item.text()
-            #Запишемо на нове місце дану карточку
-            adr = rowCol_to_addr(roz, row, column)
-            day, period, teachId = addr_to_dayPeriodTeach(roz, adr)
-            if (self.ui.radioButton.isChecked):
-                weeks = "1"
-            else:
-                weeks = "01"
-
-            roz.oldCard = getForCard(roz, day, period, teachId, weeks)
-
-        else:
-            self.oldClass = ""
-        """
     else:
         print("Row %d and Column %d was clicked" % (row, column))
         r, g, b = 255, 255, 255
-        item = self.ui.tableWidget.item(row, column)
+        item = self.ui.tableWidget2.item(row, column)
+
         if item != None:
-            cl = roz.dopTable.get("R" + str(row) + "C" + str(column))
+            cl = id_to_card(roz, item.text())
             ls = ""
             for s in cl.subjInThisLesson:
                 ls = ls + s.name
@@ -173,11 +114,11 @@ def cell_clicked(self, roz, row, column):
 
             day, period, teachId = rowCol_to_dayPeriod (roz, row, column)
 
-            c = roz.dopTable.get(dayPeriodTeach_to_addr(roz, day, period, teachId))
+            #c = roz.dopTable.get(dayPeriodTeach_to_addr(roz, day, period, teachId))
 
-            self.ui.tableWidget.setToolTip(c.subjInThisLesson[0].short+"\n"+ \
-                                     c.classInThisLesson[0].short+"\n"+ \
-                                     c.teacherInThisLesson[0].short);
+            self.ui.tableWidget.setToolTip(cl.subjInThisLesson[0].short+"\n"+ \
+                                     cl.classInThisLesson[0].short+"\n"+ \
+                                     cl.teacherInThisLesson[0].short);
 
 
 

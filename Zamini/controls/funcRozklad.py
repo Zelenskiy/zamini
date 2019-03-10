@@ -35,7 +35,11 @@ def getForCard(roz, day, period, teach, weeks):
                     return c
     return None
 
-
+def id_to_card(roz, id):
+    for c in roz.cards:
+        if id == c.id:
+            return c
+    return None
 
 def rowCol_to_dayPeriod(roz, row, col):
     day = col // roz.periods_count
@@ -120,7 +124,7 @@ def fillTable(self, ui, radioButton, roz):
             r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
             ui.tableWidget.item(row, col).setBackground(QtGui.QColor(r, g, b))
             #roz.dopTable[row][col] = c
-            roz.dopTable["R"+str(row)+"C"+str(col)] = c
+            #roz.dopTable["R"+str(row)+"C"+str(col)] = c
 
 
 

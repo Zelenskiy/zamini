@@ -4,7 +4,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem, QColor
 from ui.mainform import *
 from controls.init import *
 from controls.control import *
-from controls.funcRozklad import fillTable, addr_to_card,addr_to_dayPeriodTeach
+from controls.funcRozklad import fillTable, addr_to_card,addr_to_dayPeriodTeach,id_to_card
 from models.rozklad import *
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction,\
@@ -80,7 +80,21 @@ class MyWin(QtWidgets.QMainWindow):
     def list_click (self):
         # Запам'ятовуємо номер вибраного рядка
         self.roz.lv_index = self.Dialog.listView.selectedIndexes()[0].row()
-        self.ui.pushButton_4.setText(self.Dialog.listView.model().item(self.roz.lv_index).text())
+        s = self.Dialog.listView.model().item(self.roz.lv_index).text()
+        kl = ["", ""]
+        kl = s.split("&")
+        kl[0] = kl[0].rstrip()
+        kl[1] = kl[1].rstrip()
+        id = kl[1]
+        card = id_to_card(self.roz, id)
+        s = card.subjInThisLesson[0].short+"; " + \
+            card.teacherInThisLesson[0].short
+        self.Dialog.listView.setToolTip(s)
+
+        self.ui.pushButton_4.setText(kl[0])
+        #Встановлюємо підказку для вибраного рядка
+
+
         #self.ui.pushButton_4.setText("")
         # print ("======================== ", self.roz.lv_index)
 
@@ -136,7 +150,7 @@ class MyWin(QtWidgets.QMainWindow):
         if  self.mode != "edit":
             self.ui.pushButton_4.setStyleSheet("font-weight: bold; background-color:yellow;")
             self.mode = "edit"
-            self.Dialog.setGeometry(myapp.pos().x()+myapp.width()+5, myapp.pos().y()+27,300,myapp.height())
+            self.Dialog.setGeometry(myapp.pos().x()+myapp.width()+5, myapp.pos().y()+27,110,myapp.height())
             # item = QtWidgets.QListWidgetItem(self.ui.pushButton_4.text())
             # self.Dialog.listWidget.addItem(item)
             # self.Dialog.listWidget.currentRow = 0
