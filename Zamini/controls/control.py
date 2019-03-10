@@ -52,6 +52,13 @@ def cell_clicked(self, roz, row, column):
             kli[0] = QtWidgets.QTableWidgetItem("")
             kli[1] = QtWidgets.QTableWidgetItem("")
         self.ui.tableWidget.setItem(row, column, kli[0])
+
+        c = id_to_card(self.roz, kl[1])
+        if c != None:
+            s = c.lesson.teacherInThisLesson[0].color
+            r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
+            self.ui.tableWidget.item(row, column).setBackground(QtGui.QColor(r, g, b))
+
         self.ui.tableWidget2.setItem(row, column, kli[1])
 
 
@@ -71,6 +78,9 @@ def cell_clicked(self, roz, row, column):
                         roz.model.appendRow(QStandardItem(kl[0]+"                        &"+k_l))
                         k_l = QtWidgets.QTableWidgetItem("")
                         self.ui.tableWidget.setItem(r, column, k_l)
+
+
+
                         self.ui.tableWidget2.setItem(r, column, k_l)
 
 
