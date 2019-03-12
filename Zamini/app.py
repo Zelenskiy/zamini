@@ -2,6 +2,7 @@ import sys
 
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QColor
 from ui.mainform import *
+
 from controls.init import *
 from controls.control import *
 from controls.funcRozklad import fillTable, addr_to_card,addr_to_dayPeriodTeach,id_to_card
@@ -46,8 +47,13 @@ class MyWin(QtWidgets.QMainWindow):
 
 
         self.roz.model = QStandardItemModel()
-        list_init(self, self.roz.model)
-        self.Dialog.listView.setModel(self.roz.model)
+
+
+        # list_init(self, self.roz.model)
+
+
+
+        self.ui.listView.setModel(self.roz.model)
         self.ui.tableWidget.setMouseTracking(True)
 
         #Тут описуємо події
@@ -56,15 +62,18 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.pushButton_3.clicked.connect(self.btn3_Click)
         self.ui.pushButton_4.clicked.connect(self.btn4_Click)
         self.ui.radioButton.clicked.connect(self.radioButton_Click)
-        self.ui.radioButton_2.clicked.connect(self.radioButton_Click)
+        self.ui.radioButton_2.clicked.connect(self.radioButton_2_Click)
 
         self.ui.tableWidget.cellClicked.connect(self.cell_was_clicked)
-        self.Dialog.listView.clicked.connect(self.list_click)
+        self.ui.listView.clicked.connect(self.list_click)
 
 
         #self.Dialog.listView.itemClicked.connect(self.item_clicked)
 
         #self.ui.tableWidget.cellEntered.connect(self.cellHover)
+
+        self.ui.scrollArea_2.setVisible(False)
+        self.ui.tableWidget2.setVisible(False)
 
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Escape:
@@ -79,7 +88,7 @@ class MyWin(QtWidgets.QMainWindow):
 
     def list_click (self):
         # Запам'ятовуємо номер вибраного рядка
-        self.roz.lv_index = self.Dialog.listView.selectedIndexes()[0].row()
+        self.roz.lv_index = self.ui.listView.selectedIndexes()[0].row()
         s = self.Dialog.listView.model().item(self.roz.lv_index).text()
         kl = ["", ""]
         kl = s.split("&")
@@ -89,7 +98,7 @@ class MyWin(QtWidgets.QMainWindow):
         card = id_to_card(self.roz, id)
         s = card.lesson.subjInThisLesson[0].short+"; " + \
             card.lesson.teacherInThisLesson[0].short
-        self.Dialog.listView.setToolTip(s)
+        self.ui.listView.setToolTip(s)
 
         self.ui.pushButton_4.setText(kl[0])
         #Встановлюємо підказку для вибраного рядка
@@ -128,15 +137,15 @@ class MyWin(QtWidgets.QMainWindow):
         # if len(self.roz.model) > 0:
 
         # index = QModelIndex (self.Dialog.listView.index(0))
-        self.Dialog.listView.setCurrentIndex(0)
+        self.ui.listView.setCurrentIndex(0)
         # self.roz.model.appendRow(QStandardItem("aaaaaaaaaaa"))   # Працює
 
 
     def btn3_Click(self):
-        if self.Dialog.listView.model().rowCount() > 0:
+        if self.ui.listView.model().rowCount() > 0:
             print("Вибрано елемент: ", self.Dialog.listView.selectedIndexes()[0].row())  # Працює
-            print(self.Dialog.listView.model().item(0).text())  # Працює
-            self.Dialog.listView.model().removeRows(0 , 1)  # Працює
+            print(self.ui.listView.model().item(0).text())  # Працює
+            self.ui.listView.model().removeRows(0 , 1)  # Працює
 
 
     def item_clicked(item):
@@ -150,18 +159,20 @@ class MyWin(QtWidgets.QMainWindow):
         if  self.mode != "edit":
             self.ui.pushButton_4.setStyleSheet("font-weight: bold; background-color:yellow;")
             self.mode = "edit"
-            self.Dialog.setGeometry(myapp.pos().x()+myapp.width()+5, myapp.pos().y()+27,110,myapp.height())
+            self.ui.scrollArea_2.setVisible(True)
+            # self.Dialog.setGeometry(myapp.pos().x()+myapp.width()+5, myapp.pos().y()+27,110,myapp.height())
             # item = QtWidgets.QListWidgetItem(self.ui.pushButton_4.text())
             # self.Dialog.listWidget.addItem(item)
             # self.Dialog.listWidget.currentRow = 0
         else:
             self.mode = "view"
+            self.ui.scrollArea_2.setVisible(False)
         self.roz.lv_index = (self.roz.model.rowCount()) - 1
-        self.list_show()
+
 
 
     def list_show(self):
-        self.Dialog.show()
+        self.ui.listView.setVisible(True)
 
 
 

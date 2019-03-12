@@ -40,7 +40,7 @@ def cell_clicked(self, roz, row, column):
         kl = ["", ""]
         kli = ["", ""]
         if roz.lv_index > -1:
-            klAll = QtWidgets.QTableWidgetItem(self.Dialog.listView.model().item(self.roz.lv_index).text())
+            klAll = QtWidgets.QTableWidgetItem(self.ui.listView.model().item(self.roz.lv_index).text())
             klAll = klAll.text()
             kl = klAll.split("&")
             kl[0] = kl[0].rstrip()
@@ -92,7 +92,7 @@ def cell_clicked(self, roz, row, column):
         if self.roz.lv_index > roz.model.rowCount()-1:
             self.roz.lv_index = roz.model.rowCount() - 1
         if self.roz.lv_index > -1:
-            tmp2 = self.Dialog.listView.model().item(self.roz.lv_index).text()
+            tmp2 = self.ui.listView.model().item(self.roz.lv_index).text()
             self.ui.pushButton_4.setText(tmp2)
         # Записуємо до списку значення, яке на початку було в комірці
         if tmp != "":
@@ -198,10 +198,10 @@ def cell_clicked(self, roz, row, column):
     """
 
     # item = QtWidgets.QListWidgetItem("ss")
-    # self.Dialog.listWidget.addItem (item)
-    # self.Dialog.listWidget.addItem (item)
-    # self.Dialog.listWidget.addItem (item)
-    # self.Dialog.listWidget.addItem (item)
-    # self.Dialog.listWidget.addItem (item)
-    # Dialog.show()
+    # self.ui.listWidget.addItem (item)
+    # self.ui.listWidget.addItem (item)
+    # self.ui.listWidget.addItem (item)
+    # self.ui.listWidget.addItem (item)
+    # self.ui.listWidget.addItem (item)
+    # ui.show()
 
