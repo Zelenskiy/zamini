@@ -5,6 +5,7 @@ class Card(object):
         self.day=day
         self.period=period
         self.classroomids=classroomids
+        self.weeks ="1"
 
         # self.teacherInThisLesson = []
         # self.classInThisLesson = []
@@ -17,8 +18,12 @@ class Card(object):
     def setFields(self,lessons,days,periods):
         for l in lessons:
             if l.id==self.lessonid:
+                # учителів копіюємо, щоб можна було змінити
+                tt = []
                 for t in l.teacherInThisLesson:
-                    self.teacherInThisLesson.append(t)
+                    tt.append(t)
+                self.teacherInThisLesson = tt[:]
+                # на все інше просто посилаємося
                 for cr in l.classroomsInThisLesson:
                     self.classroomsInThisLesson.append(cr)
                 for g in l.groupInThisLesson:
@@ -28,6 +33,7 @@ class Card(object):
                 for c in l.classInThisLesson:
                     self.classInThisLesson.append(c)
                 self.weeks = l.weeks
+                self.periodspercard = l.periodspercard
             for d in days:
                 if d.day==self.day:
                     self.dayShort = d.short
