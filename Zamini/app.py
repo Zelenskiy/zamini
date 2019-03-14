@@ -1,19 +1,17 @@
 import sys
 
-from PyQt5.QtGui import QStandardItemModel, QStandardItem, QColor
-from ui.mainform import *
-
-from controls.init import *
-from controls.control import *
-from controls.funcRozklad import fillTable, addr_to_card,addr_to_dayPeriodTeach,id_to_card
-from models.rozklad import *
-
+# from PyQt5.QtGui import QStandardItemModel, QStandardItem, QColor
+from PyQt5.QtGui import QStandardItemModel
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction,\
                             QWidget, qApp
 
 from PyQt5 import QtCore,  QtWidgets
 from PyQt5.QtCore import Qt, QModelIndex
 
+from Zamini.ui.mainform import *
+from Zamini.controls.control import *
+from Zamini.controls.funcRozklad import *
+from Zamini.models.rozklad import *
 
 #import controls.funcRozklad as fr
 #import models.rozklad as rzkl

@@ -1,4 +1,6 @@
+
 from PyQt5 import QtCore, QtWidgets, QtGui
+
 from PyQt5.QtGui import QStandardItem, QImage, QBitmap, QPainter, QFont, QPen, QBrush, QColor
 from PyQt5.QtWidgets import QApplication
 from controls.funcRozklad import rowCol_to_dayPeriod, dayPeriodTeach_to_addr, \
