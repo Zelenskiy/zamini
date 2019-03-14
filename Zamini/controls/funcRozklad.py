@@ -74,7 +74,13 @@ def addr_to_card(roz, adr):
     print(adr)
     return len(roz.cards)
 
-def fillTable(self, ui, radioButton, roz):
+def fillTable(self, ui, roz):
+    #Заповнення списку вчителів у комбобокс
+    ui.comboBox.clear()
+    ui.comboBox.addItem("-------")
+    for t in roz.teachers:
+        ui.comboBox.addItem(t.short)
+
     # Заповнення таблиці
     ui.tableWidget.setColumnCount(0)
     ui.tableWidget.setRowCount(0)
@@ -105,12 +111,13 @@ def fillTable(self, ui, radioButton, roz):
         labelVert.append(t.short)
         ui.tableWidget.setVerticalHeaderLabels(labelVert)
         ui.tableWidget2.setVerticalHeaderLabels(labelVert)
+
     for c in roz.cards:
         col = len(roz.periods) * int(c.day) + int(c.period) - 1
-        w = c.weeks
-        if (radioButton.isChecked()) and (w == "01"):
+        w = c.lesson.weeks
+        if (ui.radioButton.isChecked()) and (w == "01"):
             continue
-        if (radioButton.isChecked() == False) and (w == "10"):
+        if (not (ui.radioButton.isChecked())) and (w == "10"):
             continue
         for t in c.lesson.teacherInThisLesson:
             row = int(t.id[1:]) - 1

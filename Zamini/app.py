@@ -42,7 +42,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.roz.periods_count = len(self.roz.periods)
 
 
-        fillTable(self, self.ui, self.ui.radioButton, self.roz)
+        fillTable(self, self.ui,  self.roz)
         periods_count = len(self.roz.periods)
 
 
@@ -64,8 +64,14 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.radioButton.clicked.connect(self.radioButton_Click)
         self.ui.radioButton_2.clicked.connect(self.radioButton_2_Click)
 
+        # self.ui.tableWidget.mousePressEvent = self.mousePressEvent
+        # self.ui.tableWidget.mouseReleaseEvent = self.mouseReleaseEvent
+
         self.ui.tableWidget.cellClicked.connect(self.cell_was_clicked)
+
         self.ui.listView.clicked.connect(self.list_click)
+
+        self.ui.comboBox.activated.connect(self.comboBox_click)
 
 
         #self.Dialog.listView.itemClicked.connect(self.item_clicked)
@@ -74,6 +80,48 @@ class MyWin(QtWidgets.QMainWindow):
 
         self.ui.scrollArea_2.setVisible(False)
         self.ui.tableWidget2.setVisible(False)
+
+    # def mousePressEvent(self, event):
+    #     super().mousePressEvent(event)
+    #     if event.buttons() == Qt.LeftButton:
+    #         print ("left")
+    #     else:
+    #         print("right")
+
+    #
+    # def mouseReleaseEvent(self, event):
+    #     if event.buttons() == Qt.LeftButton:
+    #         print("left")
+    #     else:
+    #         print("right")
+    #
+    #     super().mouseReleaseEvent(event)
+    #     cell_clicked(self, self.roz)
+
+
+        # if event.buttons() == Qt.LeftButton:
+        #     cell_clicked(self, self.roz)
+
+
+    def comboBox_click(self):
+        # Вибираємо уроки відсутнього вчителя
+        print(self.ui.comboBox.currentText())   # Працює
+        # Виділяємо вчителя в таблиці
+
+        self.ui.tableWidget.item(1, 0).setBackground(QColor(100, 100, 150))
+
+        for i in range(0, 10):
+            if self.ui.tableWidget.item(1, i) != None:
+                self.ui.tableWidget.item(1, i).setBackground(QColor(100, 50, 150))
+
+
+
+
+
+
+
+    def cell_was_clicked(self, row, column):
+        cell_clicked(self, self.roz, row, column) #Клацнули таблицю розкладу вчителів лівою кн. мишки
 
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Escape:
@@ -89,7 +137,7 @@ class MyWin(QtWidgets.QMainWindow):
     def list_click (self):
         # Запам'ятовуємо номер вибраного рядка
         self.roz.lv_index = self.ui.listView.selectedIndexes()[0].row()
-        s = self.Dialog.listView.model().item(self.roz.lv_index).text()
+        s = self.ui.listView.model().item(self.roz.lv_index).text()
         kl = ["", ""]
         kl = s.split("&")
         kl[0] = kl[0].rstrip()
@@ -101,6 +149,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.listView.setToolTip(s)
 
         self.ui.pushButton_4.setText(kl[0])
+        mySetCursor(self, kl[0])
         #Встановлюємо підказку для вибраного рядка
 
 
@@ -116,17 +165,17 @@ class MyWin(QtWidgets.QMainWindow):
             print('mouse move: (%d, %d)' % (pos.x(), pos.y()))
         return True
 
-    def cell_was_clicked(self, row, column):
-        cell_clicked(self, self.roz, row, column) #Клацнули таблицю розкладу вчителів лівою кн. мишки
+
+
 
 
 
 
     def radioButton_Click(self):
-        fillTable(self, self.ui, self.ui.radioButton, self.roz)
+        fillTable(self, self.ui,  self.roz)
 
     def radioButton_2_Click(self):
-        fillTable(self, self.ui, self.ui.radioButton, self.roz)
+        fillTable(self, self.ui, self.roz)
 
     def btn1_Click(self):
         self.ui.tableWidget2.setVisible(not self.ui.tableWidget2.isVisible())
@@ -167,6 +216,7 @@ class MyWin(QtWidgets.QMainWindow):
         else:
             self.mode = "view"
             self.ui.scrollArea_2.setVisible(False)
+            QApplication.setOverrideCursor(Qt.ArrowCursor)
         self.roz.lv_index = (self.roz.model.rowCount()) - 1
 
 

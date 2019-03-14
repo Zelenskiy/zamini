@@ -94,6 +94,13 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Відсутній вчитель</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QComboBox" name="comboBox"/>
           </item>
           <item>

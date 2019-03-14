@@ -1,9 +1,9 @@
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtGui import QStandardItem
+from PyQt5.QtGui import QStandardItem, QImage, QBitmap, QPainter, QFont, QPen, QBrush, QColor
 from PyQt5.QtWidgets import QApplication
 from controls.funcRozklad import rowCol_to_dayPeriod, dayPeriodTeach_to_addr, \
     rowCol_to_addr, addr_to_dayPeriodTeach, getForCard, id_to_card
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt, QTimer, QRect, QPoint
 from PyQt5.QtGui import QPixmap
 
 def testFunc():
@@ -12,10 +12,68 @@ def testFunc():
 def testFunc2():
     print("Ok_2")
 
+    """
+    procedure DrawArrowHead(Canvas: TCanvas; X, Y: integer; Angle, LW: extended);
+var
+  A1, A2: extended;
+  Arrow: array[0..3] of TPoint;
+  OldWidth: integer;
+const
+  Beta = 0.322;
+  LineLen = 4.74;
+  CentLen = 3;
+begin
+  Angle := Pi + Angle;
+  Arrow[0] := Point(X, Y);
+  A1 := Angle - Beta;
+  A2 := Angle + Beta;
+  Arrow[1] := Point(X + Round(LineLen * LW * Cos(A1)), Y - Round(LineLen * LW * Sin(A1)));
+  Arrow[2] := Point(X + Round(CentLen * LW * Cos(Angle)), Y - Round(CentLen * LW * Sin(Angle)));
+  Arrow[3] := Point(X + Round(LineLen * LW * Cos(A2)), Y - Round(LineLen * LW * Sin(A2)));
+  OldWidth := Canvas.Pen.Width;
+  Canvas.Pen.Width := 1;
+  Canvas.Brush.Style := bsSolid;
+  Canvas.Pen.Color := Form1.penColor;
+  Canvas.Brush.Color := Form1.penColor;
+  Canvas.Polygon(Arrow);
+  Canvas.Pen.Width := OldWidth;
+end;
+    
+    """
 
+
+def mySetCursor(self,text):
+    if text != "":
+        bmp = QPixmap(32, 32)
+        bmp.fill()
+        qp = QPainter()
+        qp.begin(bmp)
+        qp.setPen(QtGui.QPen(QtGui.QColor("#000"), 2, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap))
+
+        polygon = QtGui.QPolygonF()
+        polygon.append(QtCore.QPointF(0, 0))
+        polygon.append(QtCore.QPointF(16, 8))
+        polygon.append(QtCore.QPointF(8, 8))
+        polygon.append(QtCore.QPointF(8, 16))
+        polygon.append(QtCore.QPointF(0, 0))
+
+
+        qp.drawPolygon(polygon)
+        qp.setPen(QColor(0, 0, 255))
+        qp.setFont(QFont('Decorative', 10))
+        qp.drawText(QRect(0, 0, 32, 32), Qt.AlignCenter, text)
+
+        qp.end()
+        qp.drawPixmap(QPoint(0, 0), bmp, QRect(0, 0, 32, 32))
+        self.setCursor(QtGui.QCursor(bmp, 0, 0))
+    else:
+        QApplication.setOverrideCursor(Qt.ArrowCursor)
 
 
 def cell_clicked(self, roz, row, column):
+
+    row = self.ui.tableWidget.currentRow()
+    column = self.ui.tableWidget.currentColumn()
 
     if self.mode == "edit":
         #self.roz.lv_index = (roz.model.rowCount()) - 1
@@ -32,6 +90,7 @@ def cell_clicked(self, roz, row, column):
         else:
             tmp = tmp.text()
             tmp2 = tmp2.text()
+        mySetCursor(self,tmp)
 
         # Записуємо до комірки значення зі списку
         # TODO
@@ -93,21 +152,25 @@ def cell_clicked(self, roz, row, column):
             self.roz.lv_index = roz.model.rowCount() - 1
         if self.roz.lv_index > -1:
             tmp2 = self.ui.listView.model().item(self.roz.lv_index).text()
-            self.ui.pushButton_4.setText(tmp2)
+            if tmp2.index("&")>-1:
+                x,y = tmp2.split("&")
+            else:
+                x = tmp2
+            x = x.rstrip()
+            self.ui.pushButton_4.setText(x)
         # Записуємо до списку значення, яке на початку було в комірці
         if tmp != "":
             roz.model.appendRow(QStandardItem(tmp+"                        &"+tmp2))
             self.roz.lv_index = (roz.model.rowCount()) - 1
+        # mySetCursor(self, tmp)
         if roz.model.rowCount() > 0:
-            # QApplication.setOverrideCursor(Qt.BitmapCursor)
-            # bmp =
+            mySetCursor(self,tmp)
 
-            # self.setCursor(QtGui.QCursor(QtGui.QPixmap("image.bmp"),0,0))
-            QApplication.setOverrideCursor(Qt.DragMoveCursor)
-            # QApplication.restoreOverrideCursor()
+            # QApplication.setOverrideCursor(Qt.DragMoveCursor)
+
         else:
-
-            QApplication.setOverrideCursor(Qt.ArrowCursor)
+            pass
+            # QApplication.setOverrideCursor(Qt.ArrowCursor)
             # QApplication.restoreOverrideCursor()
 
     else:
