@@ -80,7 +80,8 @@ def Build(fileName):
                 d0.lesson = None
                 for ll in lessons:
                     if ll.id == d0.lessonid:
-                        d0.lesson = ll
+                        d0.lesson = copy.deepcopy(ll)
+                        # d0.lesson = ll
                         break
 
                 n = int(d0.lesson.periodspercard)
@@ -89,6 +90,7 @@ def Build(fileName):
                 else:
                     cards.append(d0)
                     d1 = copy.deepcopy(d0)
+                    # d1 = d0
                     id = id + 1
                     d1.id = "*"+str(id)
                     for less in range(1, n):
