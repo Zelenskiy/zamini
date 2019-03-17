@@ -93,14 +93,13 @@ def cell_clicked(self, roz, row, column):
             if c != None:
                 c.period, c.day, teacher = rowCol_to_dayPeriodTeacher(roz, row, column)
                 for i, t in enumerate(c.lesson.teacherInThisLesson):
-                   if t.id == teacher.id:
-                       c.lesson.teacherInThisLesson.remove(t)
+                    if t.id == teacher.id:
+                        c.lesson.teacherInThisLesson.remove(t)
 
         mySetCursor(self, tmp)
 
-
         # Записуємо до комірки значення зі списку
-        # TODO
+
 
         self.ui.pushButton_4.setText(tmp)
         kl = ["", ""]
@@ -120,7 +119,7 @@ def cell_clicked(self, roz, row, column):
         self.ui.tableWidget.setItem(row, column, kli[0])
         c = id_to_card(self.roz, kl[1])
         if c != None:
-            if len(c.lesson.teacherInThisLesson)>0:
+            if len(c.lesson.teacherInThisLesson) > 0:
                 s = c.lesson.teacherInThisLesson[0].color
             else:
                 s = "#FFFFFF"
@@ -130,7 +129,7 @@ def cell_clicked(self, roz, row, column):
             c.period, c.day, teacher = rowCol_to_dayPeriodTeacher(roz, row, column)
             f = 0
             for t in c.lesson.teacherInThisLesson:
-               if t == teacher:
+                if t == teacher:
                     f = 1
                     break
             if f == 0:
