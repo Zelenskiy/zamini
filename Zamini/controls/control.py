@@ -69,9 +69,11 @@ def mySetCursor(self, text):
 
         qp.end()
         qp.drawPixmap(QPoint(0, 0), bmp, QRect(0, 0, 32, 32))
-        self.setCursor(QtGui.QCursor(bmp, 0, 0))
+        self.ui.tableWidget.setCursor(QtGui.QCursor(bmp, 0, 0))
+
     else:
-        QApplication.setOverrideCursor(Qt.ArrowCursor)
+        self.ui.tableWidget.setCursor(Qt.ArrowCursor)
+        # QApplication.setOverrideCursor(Qt.ArrowCursor)
 
 
 def cell_clicked(self, roz, row, column):
