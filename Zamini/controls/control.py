@@ -1,4 +1,3 @@
-
 from PyQt5 import QtCore, QtWidgets, QtGui
 
 from PyQt5.QtGui import QStandardItem, QImage, QBitmap, QPainter, QFont, QPen, QBrush, QColor
@@ -8,8 +7,12 @@ from controls.funcRozklad import rowCol_to_dayPeriod, dayPeriodTeach_to_addr, \
 from PyQt5.QtCore import Qt, QTimer, QRect, QPoint
 from PyQt5.QtGui import QPixmap
 
+from controls.funcRozklad import rowCol_to_dayPeriodTeacher
+
+
 def testFunc():
     print("Ok_1")
+
 
 def testFunc2():
     print("Ok_2")
@@ -44,7 +47,7 @@ end;
     """
 
 
-def mySetCursor(self,text):
+def mySetCursor(self, text):
     if text != "":
         bmp = QPixmap(32, 32)
         bmp.fill()
@@ -59,7 +62,6 @@ def mySetCursor(self,text):
         polygon.append(QtCore.QPointF(8, 16))
         polygon.append(QtCore.QPointF(0, 0))
 
-
         qp.drawPolygon(polygon)
         qp.setPen(QColor(0, 0, 255))
         qp.setFont(QFont('Decorative', 10))
@@ -73,17 +75,11 @@ def mySetCursor(self,text):
 
 
 def cell_clicked(self, roz, row, column):
-
     row = self.ui.tableWidget.currentRow()
     column = self.ui.tableWidget.currentColumn()
 
     if self.mode == "edit":
-        #self.roz.lv_index = (roz.model.rowCount()) - 1
-
         # Записуємо значення комірки до тимчасової змінної
-        # TODO
-        #adrTmpRC = rowCol_to_addr(roz, row, column)
-
         tmp = self.ui.tableWidget.item(row, column)
         tmp2 = self.ui.tableWidget2.item(row, column)
         if tmp == None:
@@ -92,7 +88,16 @@ def cell_clicked(self, roz, row, column):
         else:
             tmp = tmp.text()
             tmp2 = tmp2.text()
-        mySetCursor(self,tmp)
+            #   Вилучаємо ім'я вчителя з картки
+            c = id_to_card(self.roz, tmp2)
+            if c != None:
+                c.period, c.day, teacher = rowCol_to_dayPeriodTeacher(roz, row, column)
+                for i, t in enumerate(c.lesson.teacherInThisLesson):
+                   if t.id == teacher.id:
+                       c.lesson.teacherInThisLesson.remove(t)
+
+        mySetCursor(self, tmp)
+
 
         # Записуємо до комірки значення зі списку
         # TODO
@@ -113,15 +118,25 @@ def cell_clicked(self, roz, row, column):
             kli[0] = QtWidgets.QTableWidgetItem("")
             kli[1] = QtWidgets.QTableWidgetItem("")
         self.ui.tableWidget.setItem(row, column, kli[0])
-
         c = id_to_card(self.roz, kl[1])
         if c != None:
-            s = c.lesson.teacherInThisLesson[0].color
+            if len(c.lesson.teacherInThisLesson)>0:
+                s = c.lesson.teacherInThisLesson[0].color
+            else:
+                s = "#FFFFFF"
             r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
             self.ui.tableWidget.item(row, column).setBackground(QtGui.QColor(r, g, b))
+            # Шукаємо за  id картку уроку та змінюємо в ній day, period
+            c.period, c.day, teacher = rowCol_to_dayPeriodTeacher(roz, row, column)
+            f = 0
+            for t in c.lesson.teacherInThisLesson:
+               if t == teacher:
+                    f = 1
+                    break
+            if f == 0:
+                c.lesson.teacherInThisLesson.append(teacher)
 
         self.ui.tableWidget2.setItem(row, column, kli[1])
-
 
         #           проходимо по стовпчику і вилучаємо картки з даним класом до списку
         for r in range(0, len(roz.teachers) - 1):
@@ -136,37 +151,32 @@ def cell_clicked(self, roz, row, column):
                             k_l = ""
                         else:
                             k_l = k_l.text()
-                        roz.model.appendRow(QStandardItem(kl[0]+"                        &"+k_l))
+                        roz.model.appendRow(QStandardItem(kl[0] + "                        &" + k_l))
                         k_l = QtWidgets.QTableWidgetItem("")
                         self.ui.tableWidget.setItem(r, column, k_l)
 
-
-
                         self.ui.tableWidget2.setItem(r, column, k_l)
-
-
 
         # Вилучаємо зі списку зчитане значення
         roz.model.removeRow(self.roz.lv_index)
 
-
-        if self.roz.lv_index > roz.model.rowCount()-1:
+        if self.roz.lv_index > roz.model.rowCount() - 1:
             self.roz.lv_index = roz.model.rowCount() - 1
         if self.roz.lv_index > -1:
             tmp2 = self.ui.listView.model().item(self.roz.lv_index).text()
-            if tmp2.index("&")>-1:
-                x,y = tmp2.split("&")
+            if tmp2.index("&") > -1:
+                x, y = tmp2.split("&")
             else:
                 x = tmp2
             x = x.rstrip()
             self.ui.pushButton_4.setText(x)
         # Записуємо до списку значення, яке на початку було в комірці
         if tmp != "":
-            roz.model.appendRow(QStandardItem(tmp+"                        &"+tmp2))
+            roz.model.appendRow(QStandardItem(tmp + "                        &" + tmp2))
             self.roz.lv_index = (roz.model.rowCount()) - 1
         # mySetCursor(self, tmp)
         if roz.model.rowCount() > 0:
-            mySetCursor(self,tmp)
+            mySetCursor(self, tmp)
 
             # QApplication.setOverrideCursor(Qt.DragMoveCursor)
 
@@ -187,19 +197,23 @@ def cell_clicked(self, roz, row, column):
                 ls = ls + s.name
             self.ui.label.setText(ls)
 
-            day, period, teachId = rowCol_to_dayPeriod (roz, row, column)
+            day, period, teachId = rowCol_to_dayPeriod(roz, row, column)
 
-            #c = roz.dopTable.get(dayPeriodTeach_to_addr(roz, day, period, teachId))
+            # c = roz.dopTable.get(dayPeriodTeach_to_addr(roz, day, period, teachId))
+            t_s = ""
+            for t in cl.lesson.teacherInThisLesson:
+                t_s += t.short + " "
+            c_s = ""
+            for c in cl.lesson.classInThisLesson:
+                c_s += c.short + " "
 
-            self.ui.tableWidget.setToolTip(cl.lesson.subjInThisLesson[0].short+"\n"+ \
-                                     cl.lesson.classInThisLesson[0].short+"\n"+ \
-                                     cl.lesson.teacherInThisLesson[0].short);
+            self.ui.tableWidget.setToolTip(cl.lesson.subjInThisLesson[0].short + "\n" + \
+                                           c_s + "\n" + \
+                                           t_s);
 
+            # timer.start(1000)
 
-
-            #timer.start(1000)
-
-            #print (c.lessonid)
+            # print (c.lessonid)
             self.ui.pushButton_4.setText(item.text())
             s = cl.lesson.teacherInThisLesson[0].color
             r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
@@ -211,20 +225,16 @@ def cell_clicked(self, roz, row, column):
 
         self.ui.pushButton_4.setStyleSheet("background-color: rgb(" + str(r) + "," + str(g) + "," + str(b) + ")")
 
-
-
         # self.ui.tableWidget.mouseReleaseEvent = self.myMouseReleaseEvent
-        #self.ui.tableWidget.mousePressEvent = self.mousePressEvent
+        # self.ui.tableWidget.mousePressEvent = self.mousePressEvent
 
-        #self.ui.tableWidget.dragEnterEvent = self.dragEnterEvent
-        #self.ui.tableWidget.dropEvent = self.myDropEvent
-        #self.ui.tableWidget.startDrag = self.myStartDrag
+        # self.ui.tableWidget.dragEnterEvent = self.dragEnterEvent
+        # self.ui.tableWidget.dropEvent = self.myDropEvent
+        # self.ui.tableWidget.startDrag = self.myStartDrag
 
-        #self.ui.tableWidget.setMouseTracking(True)
-        #self.ui.tableWidget.installEventFilter(self)
+        # self.ui.tableWidget.setMouseTracking(True)
+        # self.ui.tableWidget.installEventFilter(self)
         # self.ui.tableWidget.mouseMoveEvent = self.mouseMoveEvent
-
-
 
     """
     def myDropEvent(self, event):
@@ -269,4 +279,3 @@ def cell_clicked(self, roz, row, column):
     # self.ui.listWidget.addItem (item)
     # self.ui.listWidget.addItem (item)
     # ui.show()
-
