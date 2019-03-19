@@ -81,9 +81,24 @@ def addr_to_dayPeriodTeach(roz,adr):
     period = col % roz.periods_count + 1
     return day, period, teachId
 
+def equGrups(gr1 , gr2):
+    for g1 in gr1:
+        for g2 in gr2:
+            if g1.id == g2.id:
+                return True
+    return False
+
+
 def addr_to_card(roz, adr):
     print(adr)
     return len(roz.cards)
+
+def cardId_to_groupId(roz, cardId):
+    for c in roz.cards:
+        for g in c.lesson.groupInThisLesson:
+            return g
+    return None
+
 
 def fillTable(self, ui, roz):
     #Заповнення списку вчителів у комбобокс

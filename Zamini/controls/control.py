@@ -9,6 +9,8 @@ from PyQt5.QtGui import QPixmap
 
 from controls.funcRozklad import rowCol_to_dayPeriodTeacher
 
+from Zamini.controls.funcRozklad import cardId_to_groupId, equGrups
+
 
 def testFunc():
     print("Ok_1")
@@ -139,24 +141,30 @@ def cell_clicked(self, roz, row, column):
 
         self.ui.tableWidget2.setItem(row, column, kli[1])
 
-        #           проходимо по стовпчику і вилучаємо картки з даним класом до списку
+        #           проходимо по стовпчику і вилучаємо картки з даною групою/класом до списку
+        if self.ui.tableWidget2.item(row, column) != None:
+            s1 = self.ui.tableWidget2.item(row, column).text().strip()
+        else:
+            sl = ""
+        gr0 = cardId_to_groupId(roz, sl)
         for r in range(0, len(roz.teachers) - 1):
             if r == row:
                 continue
-            if kl[0] != "":
-                if self.ui.tableWidget.item(r, column) != None:
-                    s1 = self.ui.tableWidget.item(r, column).text()
-                    if s1.strip() == kl[0].strip():
-                        k_l = self.ui.tableWidget2.item(r, column)
-                        if k_l == None:
-                            k_l = ""
-                        else:
-                            k_l = k_l.text()
-                        roz.model.appendRow(QStandardItem(kl[0] + "                        &" + k_l))
-                        k_l = QtWidgets.QTableWidgetItem("")
-                        self.ui.tableWidget.setItem(r, column, k_l)
+            if self.ui.tableWidget2.item(r, column) != None:
+                s1 = self.ui.tableWidget2.item(r, column).text()
+                # Шукаємо картку
+                gr = cardId_to_groupId(roz, sl)
+                if equGrups(gr0, gr):
 
-                        self.ui.tableWidget2.setItem(r, column, k_l)
+
+
+
+
+                roz.model.appendRow(QStandardItem(kl[0] + "                        &" + k_l))
+                k_l = QtWidgets.QTableWidgetItem("")
+                self.ui.tableWidget.setItem(r, column, k_l)
+
+                self.ui.tableWidget2.setItem(r, column, k_l)
 
         # Вилучаємо зі списку зчитане значення
         roz.model.removeRow(self.roz.lv_index)
