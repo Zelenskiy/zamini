@@ -121,8 +121,14 @@ def cell_clicked(self, roz, row, column):
         else:
             kli[0] = QtWidgets.QTableWidgetItem("")
             kli[1] = QtWidgets.QTableWidgetItem("")
-        self.ui.tableWidget.setItem(row, column, kli[0])
+
+        # Тут перевіримо, чи можна ставити. Якщо інший вчитель, то тільки урок відсутнього вчителя
         c = id_to_card(self.roz, kl[1])
+        # визначаємо вчителя відсутнього з вибраному в списку
+        teach = self.ui.listWidget.item(self.ui.listWidget.currentRow()).text()
+
+        self.ui.tableWidget.setItem(row, column, kli[0])
+
 
 
         if c != None:

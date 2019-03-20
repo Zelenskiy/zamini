@@ -55,6 +55,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.pushButton_4.clicked.connect(self.btn4_Click)
         self.ui.pushButton_7.clicked.connect(self.btn7_Click)
         self.ui.pushButton_8.clicked.connect(self.btn8_Click)
+        self.ui.pushButton_6.clicked.connect(self.btn6_Click)
 
 
 
@@ -168,10 +169,19 @@ class MyWin(QtWidgets.QMainWindow):
 
     def btn1_Click(self):
         self.ui.tableWidget2.setVisible(not self.ui.tableWidget2.isVisible())
+
+    def btn6_Click(self):
+        print("=============")
+        print(self.ui.listWidget.item(self.ui.listWidget.currentRow()).text())
+
+        # for item in range(self.ui.listWidget.count()):
+        #     print(self.ui.listWidget.item(item).text())
+
+
     def btn8_Click(self):
         if self.ui.listWidget.selectedItems() != []:
             self.ui.listWidget.takeItem(self.ui.listWidget.currentRow())
-            # print(self.ui.listWidget.selectedItems())
+
 
     def btn7_Click(self):
         if self.ui.comboBox.currentText() != "-------":
