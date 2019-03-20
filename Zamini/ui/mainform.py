@@ -6,7 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -56,6 +56,18 @@ class Ui_MainWindow(object):
         self.comboBox = QtWidgets.QComboBox(self.scrollAreaWidgetContents_2)
         self.comboBox.setObjectName("comboBox")
         self.verticalLayout_3.addWidget(self.comboBox)
+        self.pushButton_7 = QtWidgets.QPushButton(self.scrollAreaWidgetContents_2)
+        self.pushButton_7.setObjectName("pushButton_7")
+        self.verticalLayout_3.addWidget(self.pushButton_7)
+        self.pushButton_8 = QtWidgets.QPushButton(self.scrollAreaWidgetContents_2)
+        self.pushButton_8.setObjectName("pushButton_8")
+        self.verticalLayout_3.addWidget(self.pushButton_8)
+        self.listWidget = QtWidgets.QListWidget(self.scrollAreaWidgetContents_2)
+        self.listWidget.setObjectName("listWidget")
+        self.verticalLayout_3.addWidget(self.listWidget)
+        self.label_3 = QtWidgets.QLabel(self.scrollAreaWidgetContents_2)
+        self.label_3.setObjectName("label_3")
+        self.verticalLayout_3.addWidget(self.label_3)
         self.listView = QtWidgets.QListView(self.scrollAreaWidgetContents_2)
         self.listView.setObjectName("listView")
         self.verticalLayout_3.addWidget(self.listView)
@@ -129,6 +141,9 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label_2.setText(_translate("MainWindow", "Відсутній вчитель"))
+        self.pushButton_7.setText(_translate("MainWindow", "Додати"))
+        self.pushButton_8.setText(_translate("MainWindow", "Вилучити"))
+        self.label_3.setText(_translate("MainWindow", "Не поставлені уроки"))
         self.pushButton_5.setText(_translate("MainWindow", "PushButton"))
         self.pushButton_6.setText(_translate("MainWindow", "PushButton"))
         self.radioButton.setText(_translate("MainWindow", "Чисельник"))

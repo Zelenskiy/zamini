@@ -3,7 +3,7 @@ import sys
 # from PyQt5.QtGui import QStandardItemModel, QStandardItem, QColor
 from PyQt5.QtGui import QStandardItemModel
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, \
-    QWidget, qApp
+    QWidget, qApp, QListWidgetItem
 
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import Qt, QModelIndex
@@ -53,6 +53,11 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.pushButton_2.clicked.connect(self.btn2_Click)
         self.ui.pushButton_3.clicked.connect(self.btn3_Click)
         self.ui.pushButton_4.clicked.connect(self.btn4_Click)
+        self.ui.pushButton_7.clicked.connect(self.btn7_Click)
+        self.ui.pushButton_8.clicked.connect(self.btn8_Click)
+
+
+
         self.ui.radioButton.clicked.connect(self.radioButton_Click)
         self.ui.radioButton_2.clicked.connect(self.radioButton_2_Click)
 
@@ -61,7 +66,10 @@ class MyWin(QtWidgets.QMainWindow):
 
         self.ui.tableWidget.cellClicked.connect(self.cell_was_clicked)
 
+
         self.ui.listView.clicked.connect(self.list_click)
+        # self.ui.listView.paintEvent = self.paintEvent
+
 
         self.ui.comboBox.activated.connect(self.comboBox_click)
 
@@ -71,6 +79,9 @@ class MyWin(QtWidgets.QMainWindow):
 
         self.ui.scrollArea_2.setVisible(False)
         self.ui.tableWidget2.setVisible(False)
+
+    # def paintEvent(self,event):
+    #     print ("paintEvent")
 
     # def mousePressEvent(self, event):
     #     super().mousePressEvent(event)
@@ -103,7 +114,11 @@ class MyWin(QtWidgets.QMainWindow):
             if self.ui.tableWidget.item(1, i) != None:
                 self.ui.tableWidget.item(1, i).setBackground(QColor(100, 50, 150))
 
+
+
     def cell_was_clicked(self, row, column):
+        # print ("hohohohoho")
+        # print(row, "   ", column)
         cell_clicked(self, self.roz, row, column)  # Клацнули таблицю розкладу вчителів лівою кн. мишки
 
     def keyPressEvent(self, event):
@@ -153,6 +168,18 @@ class MyWin(QtWidgets.QMainWindow):
 
     def btn1_Click(self):
         self.ui.tableWidget2.setVisible(not self.ui.tableWidget2.isVisible())
+    def btn8_Click(self):
+        if self.ui.listWidget.selectedItems() != []:
+            self.ui.listWidget.takeItem(self.ui.listWidget.currentRow())
+            # print(self.ui.listWidget.selectedItems())
+
+    def btn7_Click(self):
+        if self.ui.comboBox.currentText() != "-------":
+            item = QListWidgetItem(self.ui.comboBox.currentText())
+            it = self.ui.listWidget.findItems(self.ui.comboBox.currentText(), Qt.MatchExactly)
+            if len(it) == 0:
+                self.ui.listWidget.addItem(item)
+
 
     def btn2_Click(self):
         for c in self.roz.cards:

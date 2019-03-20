@@ -104,6 +104,30 @@
            <widget class="QComboBox" name="comboBox"/>
           </item>
           <item>
+           <widget class="QPushButton" name="pushButton_7">
+            <property name="text">
+             <string>Додати</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_8">
+            <property name="text">
+             <string>Вилучити</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QListWidget" name="listWidget"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Не поставлені уроки</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QListView" name="listView"/>
           </item>
           <item>

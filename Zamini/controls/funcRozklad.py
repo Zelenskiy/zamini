@@ -88,6 +88,22 @@ def equGrups(gr1 , gr2):
                 return True
     return False
 
+def card_to_tip(crd):
+    t_s = ""
+    for t in crd.lesson.teacherInThisLesson:
+        t_s += t.short + " "
+    c_s = ""
+    for c in crd.lesson.classInThisLesson:
+        c_s += c.short + " "
+    g_s = ""
+    for g in crd.lesson.groupInThisLesson:
+        g_s += g.name + " "
+    s = crd.lesson.subjInThisLesson[0].short + "\n" + \
+        c_s + "\n" + \
+        t_s + "\n" + \
+        g_s
+    return s
+
 
 def addr_to_card(roz, adr):
     print(adr)
