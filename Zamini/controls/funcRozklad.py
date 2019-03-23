@@ -36,9 +36,15 @@ def getForCard(roz, day, period, teach, weeks):
     return None
 
 def id_to_card(roz, id):
-    for c in roz.cards:
-        if id == c.id:
-            return c
+    if id == None:
+        return None
+    if id == "":
+        return None
+    else:
+        for c in roz.cards:
+            if id == c.id:
+                return c
+
     return None
 
 def rowCol_to_dayPeriod(roz, row, col):

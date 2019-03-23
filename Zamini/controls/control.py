@@ -77,8 +77,37 @@ def mySetCursor(self, text):
         self.ui.tableWidget.setCursor(Qt.ArrowCursor)
         # QApplication.setOverrideCursor(Qt.ArrowCursor)
 
+# Беремо вмість комірок з таблиць
+def cell_to_card(self, row, column):
+    klas = self.ui.tableWidget.item(row, column)
+    idCard = self.ui.tableWidget2.item(row, column)
+    return klas, id_to_card(self.roz, idCard)
 
-def cell_clicked(self, roz, row, column):
+
+# Записуємо до комірок таблиць
+def card_to_cell(self, card, row, column):
+    clS = ""
+    for cl in card.lesson.classInThisLesson:
+        clS += cl + " "
+    clS = clS.strip()
+    t = QtWidgets.QTableWidgetItem(clS)
+    self.ui.tableWidget.setItem(row, column, t)
+    self.ui.tableWidget2.setItem(row, column, card.id)
+    return True
+
+# Беремо зі списку
+def list_to_card(self, row):
+
+    return card
+
+# Записуємо до списку
+def card_to_list(self,card):
+
+    return True
+
+
+def cell_clicked(self):
+    roz = self.roz
     row = self.ui.tableWidget.currentRow()
     column = self.ui.tableWidget.currentColumn()
 

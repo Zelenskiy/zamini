@@ -120,7 +120,7 @@ class MyWin(QtWidgets.QMainWindow):
     def cell_was_clicked(self, row, column):
         # print ("hohohohoho")
         # print(row, "   ", column)
-        cell_clicked(self, self.roz, row, column)  # Клацнули таблицю розкладу вчителів лівою кн. мишки
+        cell_clicked(self)  # Клацнули таблицю розкладу вчителів лівою кн. мишки
 
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Escape:
