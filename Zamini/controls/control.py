@@ -1,13 +1,12 @@
 from PyQt5 import QtCore, QtWidgets, QtGui
 
-from PyQt5.QtGui import QStandardItem, QPainter, QFont,QColor
+from PyQt5.QtGui import QStandardItem, QPainter, QFont, QColor
 from controls.funcRozklad import rowCol_to_dayPeriod, dayPeriodTeach_to_addr, \
     rowCol_to_addr, addr_to_dayPeriodTeach, getForCard, id_to_card
-from PyQt5.QtCore import Qt,  QRect, QPoint
+from PyQt5.QtCore import Qt, QRect, QPoint, QModelIndex, QItemSelectionModel
 from PyQt5.QtGui import QPixmap
 
 from controls.funcRozklad import rowCol_to_dayPeriodTeacher
-
 
 from controls.funcRozklad import card_to_tip
 
@@ -77,36 +76,118 @@ def mySetCursor(self, text):
         self.ui.tableWidget.setCursor(Qt.ArrowCursor)
         # QApplication.setOverrideCursor(Qt.ArrowCursor)
 
-# Беремо вмість комірок з таблиць
+
+# Беремо вміст комірок з таблиць
 def cell_to_card(self, row, column):
     klas = self.ui.tableWidget.item(row, column)
-    idCard = self.ui.tableWidget2.item(row, column)
-    return klas, id_to_card(self.roz, idCard)
+    if klas == None:
+        klas = ""
+    else:
+        klas = klas.text()
+    id_card = self.ui.tableWidget2.item(row, column)
+    if id_card == None:
+        id_card = ""
+    else:
+        id_card = id_card.text()
+    card = id_to_card(self.roz, id_card)
+    return klas, card
 
 
 # Записуємо до комірок таблиць
 def card_to_cell(self, card, row, column):
-    clS = ""
-    for cl in card.lesson.classInThisLesson:
-        clS += cl + " "
-    clS = clS.strip()
-    t = QtWidgets.QTableWidgetItem(clS)
-    self.ui.tableWidget.setItem(row, column, t)
-    self.ui.tableWidget2.setItem(row, column, card.id)
-    return True
+    if card == None:
+        self.ui.tableWidget.setItem(row, column, QtWidgets.QTableWidgetItem(""))
+        self.ui.tableWidget2.setItem(row, column, QtWidgets.QTableWidgetItem(""))
+    else:
+        cl = ""
+        for cl in card.lesson.classInThisLesson:
+            cl += cl + " "
+        cl = cl.strip()
+        t = QtWidgets.QTableWidgetItem(cl)
+        self.ui.tableWidget.setItem(row, column, t)
+        self.ui.tableWidget2.setItem(row, column, card.id)
+
 
 # Беремо зі списку
 def list_to_card(self, row):
+    if row > self.ui.listView.model().rowCount() - 1:
+        return None
+    else:
+        klAll = QtWidgets.QTableWidgetItem(self.ui.listView.model().item(row).text())
+        klAll = klAll.text()
+        klas, id_card = klAll.split("&")
+        klas = klas.rstrip()
+        id_card = id_card.rstrip()
+        card = id_to_card(self.roz, id_card)
 
-    return card
+        return klas, card
+
 
 # Записуємо до списку
-def card_to_list(self,card):
+def card_to_list(self, card):
+    if card != None:
+        id_card = card.id
+        klas = ""
+        for cl in card.lesson.classInThisLesson:
+            klas += cl.short + " "
+        klas = klas.strip()
+        if klas != "":
+            self.roz.model.appendRow(QStandardItem(klas + "                        &" + id_card))
+            # Тут встановимо виділення в listView на останній елемент
+            r = self.ui.listView.model().rowCount() - 1
+            ix = self.ui.listView.model().index(r,0)
+            self.ui.listView.selectionModel().setCurrentIndex(ix, QItemSelectionModel.ClearAndSelect)
 
-    return True
 
 
 def cell_clicked(self):
+    row = self.ui.tableWidget.currentRow()
+    column = self.ui.tableWidget.currentColumn()
+    klas, card = cell_to_card(self, row, column)
+
+    card_to_list(self,card)
+    pass
+    # if card != None:
+    #     print ("id=",card.id)
+    #     print ("klas=",klas)
+    #     card_to_list(self, card)
+    # print("++++++")
+    if self.mode == "edit":
+        list_row = self.ui.listView.selectedIndexes()[0].row()
+        klas, card = list_to_card(self, list_row)
+        print("id=", card.id)
+        print("klas=", klas)
+
+
+
+    else:
+        r, g, b = 255, 255, 255
+        if card != None:
+            ls = ""
+            for s in card.lesson.subjInThisLesson:
+                ls = ls + s.short
+            cs = ""
+            for c in card.lesson.classInThisLesson:
+                cs = cs + c.short
+            self.ui.label.setText(ls)
+            self.ui.tableWidget.setToolTip(card_to_tip(card))
+            self.ui.pushButton_4.setText(cs)
+            s = card.lesson.teacherInThisLesson[0].color
+            r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
+        else:
+            self.ui.pushButton_4.setText("")
+            self.ui.label.setText("")
+            self.ui.label.setToolTip("")
+            self.ui.tableWidget.setToolTip("")
+        self.ui.pushButton_4.setStyleSheet("background-color: rgb(" + str(r) + "," + str(g) + "," + str(b) + ")")
+
+
+
+
+
+
+
+def _cell_clicked(self):
     roz = self.roz
     row = self.ui.tableWidget.currentRow()
     column = self.ui.tableWidget.currentColumn()
@@ -134,7 +215,6 @@ def cell_clicked(self):
 
         # Записуємо до комірки значення зі списку
 
-
         self.ui.pushButton_4.setText(tmp)
         kl = ["", ""]
         kli = ["", ""]
@@ -157,8 +237,6 @@ def cell_clicked(self):
         teach = self.ui.listWidget.item(self.ui.listWidget.currentRow()).text()
 
         self.ui.tableWidget.setItem(row, column, kli[0])
-
-
 
         if c != None:
             if len(c.lesson.teacherInThisLesson) > 0:
@@ -196,10 +274,8 @@ def cell_clicked(self):
                         k_l = QtWidgets.QTableWidgetItem("")
                         self.ui.tableWidget.setItem(r, column, k_l)
 
-
                         self.ui.tableWidget2.setItem(r, column, k_l)
             #    тепер перевіримо вчителів, що йдуть в парі
-
 
         # Вилучаємо зі списку зчитане значення
         roz.model.removeRow(self.roz.lv_index)
