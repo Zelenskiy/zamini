@@ -125,7 +125,7 @@ class MyWin(QtWidgets.QMainWindow):
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Escape:
             print("pressed key " + str(event.key()))
-            # self.roz.lv_index = -1
+            self.roz.lv_index = -1
             ix = self.ui.listView.model().index(-1, 0)
             self.ui.listView.selectionModel().setCurrentIndex(ix, QItemSelectionModel.ClearAndSelect)
             self.ui.pushButton_4.setText("")

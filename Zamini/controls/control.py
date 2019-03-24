@@ -120,6 +120,8 @@ def list_to_card(self, row):
         id_card = id_card.rstrip()
         card = id_to_card(self.roz, id_card)
         self.roz.model.removeRow(self.ui.listView.selectedIndexes()[0].row())
+        r = self.ui.listView.model().rowCount() - 1
+        self.roz.lv_index = r
         return klas, card
 
 
@@ -136,6 +138,7 @@ def card_to_list(self, card):
             self.roz.model.appendRow(QStandardItem(klas + "                        &" + id_card))
             # Тут встановимо виділення в listView на останній елемент
             r = self.ui.listView.model().rowCount() - 1
+            self.roz.lv_index = r
             ix = self.ui.listView.model().index(r, 0)
             self.ui.listView.selectionModel().setCurrentIndex(ix, QItemSelectionModel.ClearAndSelect)
 
@@ -156,7 +159,7 @@ def cell_clicked(self):
         list_row = -1
         klas0, card0 = None, None
         if self.ui.listView.model().rowCount() > 0:  # Беремо зі списку
-            if self.ui.listView.selectedIndexes() != None:
+            if self.roz.lv_index > -1:
                 list_row = self.ui.listView.selectedIndexes()[0].row()
                 klas0, card0 = list_to_card(self, list_row)
         print(list_row)
