@@ -100,15 +100,15 @@ def card_to_cell(self, card, row, column):
         self.ui.tableWidget2.setItem(row, column, QtWidgets.QTableWidgetItem(""))
     else:
         cl = ""
-        for cl in card.lesson.classInThisLesson:
-            cl += cl + " "
+        for c in card.lesson.classInThisLesson:
+            cl += c.short + " "
         cl = cl.strip()
         t = QtWidgets.QTableWidgetItem(cl)
         self.ui.tableWidget.setItem(row, column, t)
-        self.ui.tableWidget2.setItem(row, column, card.id)
+        self.ui.tableWidget2.setItem(row, column, QtWidgets.QTableWidgetItem(card.id))
 
 
-# Беремо зі списку
+# Беремо зі списку й вилучаємо взятий елемент
 def list_to_card(self, row):
     if row > self.ui.listView.model().rowCount() - 1:
         return None
@@ -119,7 +119,7 @@ def list_to_card(self, row):
         klas = klas.rstrip()
         id_card = id_card.rstrip()
         card = id_to_card(self.roz, id_card)
-
+        self.roz.model.removeRow(self.ui.listView.selectedIndexes()[0].row())
         return klas, card
 
 
@@ -132,12 +132,12 @@ def card_to_list(self, card):
             klas += cl.short + " "
         klas = klas.strip()
         if klas != "":
+            # Додати, якщо такого немає
             self.roz.model.appendRow(QStandardItem(klas + "                        &" + id_card))
             # Тут встановимо виділення в listView на останній елемент
             r = self.ui.listView.model().rowCount() - 1
-            ix = self.ui.listView.model().index(r,0)
+            ix = self.ui.listView.model().index(r, 0)
             self.ui.listView.selectionModel().setCurrentIndex(ix, QItemSelectionModel.ClearAndSelect)
-
 
 
 def cell_clicked(self):
@@ -145,18 +145,30 @@ def cell_clicked(self):
     column = self.ui.tableWidget.currentColumn()
     klas, card = cell_to_card(self, row, column)
 
-    card_to_list(self,card)
-    pass
+    # card_to_list(self,card)
+    # pass
     # if card != None:
     #     print ("id=",card.id)
     #     print ("klas=",klas)
     #     card_to_list(self, card)
     # print("++++++")
     if self.mode == "edit":
-        list_row = self.ui.listView.selectedIndexes()[0].row()
-        klas, card = list_to_card(self, list_row)
-        print("id=", card.id)
-        print("klas=", klas)
+        list_row = -1
+        klas0, card0 = None, None
+        if self.ui.listView.model().rowCount() > 0:  # Беремо зі списку
+            if self.ui.listView.selectedIndexes() != None:
+                list_row = self.ui.listView.selectedIndexes()[0].row()
+                klas0, card0 = list_to_card(self, list_row)
+        print(list_row)
+
+        # Беремо вміст комірок з таблиць
+        klas, card = cell_to_card(self, row, column)
+
+        # Записуємо до комірок таблиць
+        card_to_cell(self, card0, row, column)
+
+        # Записуємо до списку
+        card_to_list(self, card)
 
 
 
@@ -180,11 +192,6 @@ def cell_clicked(self):
             self.ui.label.setToolTip("")
             self.ui.tableWidget.setToolTip("")
         self.ui.pushButton_4.setStyleSheet("background-color: rgb(" + str(r) + "," + str(g) + "," + str(b) + ")")
-
-
-
-
-
 
 
 def _cell_clicked(self):
