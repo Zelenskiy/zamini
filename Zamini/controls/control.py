@@ -77,9 +77,29 @@ def mySetCursor(self, text):
         # QApplication.setOverrideCursor(Qt.ArrowCursor)
 
 
+# Вилучаємо вміст комірки в таблицях
+def cell_remove(self, row, column):
+    self.ui.tableWidget.setItem(row, column, QtWidgets.QTableWidgetItem(""))
+    self.ui.tableWidget2.setItem(row, column, QtWidgets.QTableWidgetItem(""))
+
+
+# Вилучаємо картку з обох таблиць
+def card_remove(self, card):
+    if card != None:
+        for r in range(0, self.ui.tableWidget.rowCount()):
+            for c in range(0, self.ui.tableWidget.columnCount()):
+                item = self.ui.tableWidget2.item(r, c)
+                if item != None:
+                    item = item.text()
+                    if item == card.id:
+                        self.ui.tableWidget.setItem(r, c, QtWidgets.QTableWidgetItem(""))
+                        self.ui.tableWidget2.setItem(r, c, QtWidgets.QTableWidgetItem(""))
+
+
 # Беремо вміст комірок з таблиць
 def cell_to_card(self, row, column):
     klas = self.ui.tableWidget.item(row, column)
+
     if klas == None:
         klas = ""
     else:
@@ -93,7 +113,7 @@ def cell_to_card(self, row, column):
     return klas, card
 
 
-# Записуємо до комірок таблиць
+# Записуємо до комірок таблиць та замінюємо там поля day period
 def card_to_cell(self, card, row, column):
     if card == None:
         self.ui.tableWidget.setItem(row, column, QtWidgets.QTableWidgetItem(""))
@@ -106,7 +126,10 @@ def card_to_cell(self, card, row, column):
         t = QtWidgets.QTableWidgetItem(cl)
         self.ui.tableWidget.setItem(row, column, t)
         self.ui.tableWidget2.setItem(row, column, QtWidgets.QTableWidgetItem(card.id))
-
+        s = card.lesson.teacherInThisLesson[0].color
+        r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
+        self.ui.tableWidget.item(row, column).setBackground(QtGui.QColor(r, g, b))
+        card.period, card.day, teacher = rowCol_to_dayPeriodTeacher(self, row, column)
 
 # Беремо зі списку й вилучаємо взятий елемент
 def list_to_card(self, row):
@@ -141,6 +164,7 @@ def card_to_list(self, card):
             self.roz.lv_index = r
             ix = self.ui.listView.model().index(r, 0)
             self.ui.listView.selectionModel().setCurrentIndex(ix, QItemSelectionModel.ClearAndSelect)
+        mySetCursor(self, klas)
 
 
 def cell_clicked(self):
@@ -148,13 +172,6 @@ def cell_clicked(self):
     column = self.ui.tableWidget.currentColumn()
     klas, card = cell_to_card(self, row, column)
 
-    # card_to_list(self,card)
-    # pass
-    # if card != None:
-    #     print ("id=",card.id)
-    #     print ("klas=",klas)
-    #     card_to_list(self, card)
-    # print("++++++")
     if self.mode == "edit":
         list_row = -1
         klas0, card0 = None, None
@@ -162,13 +179,29 @@ def cell_clicked(self):
             if self.roz.lv_index > -1:
                 list_row = self.ui.listView.selectedIndexes()[0].row()
                 klas0, card0 = list_to_card(self, list_row)
-        print(list_row)
 
         # Беремо вміст комірок з таблиць
         klas, card = cell_to_card(self, row, column)
 
+        # Вилучаємо з таблиць цю картку
+        card_remove(self, card)
+
         # Записуємо до комірок таблиць
         card_to_cell(self, card0, row, column)
+
+        #   шукаємо інших вчителів цієї картки та додаємо їх також
+        if card0 != None:
+            for t in card0.lesson.teacherInThisLesson:
+                r = int(t.id[1:])-1 # номер рядка вчителя
+                if r == row:
+                    continue
+                item = self.ui.tableWidget2.item(r, column)
+                if item != None:
+                    klas_d, card_d = cell_to_card(self, r, column)
+                    card_to_list(self, card_d)
+                card_to_cell(self, card0, r, column)
+
+
 
         # Записуємо до списку
         card_to_list(self, card)

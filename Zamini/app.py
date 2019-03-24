@@ -235,23 +235,23 @@ class MyWin(QtWidgets.QMainWindow):
     def list_show(self):
         self.ui.listView.setVisible(True)
 
+def my_exception_hook(exctype, value, traceback):
+    # Print the error and traceback
+    print(exctype, value, traceback)
+    # Call the normal Exception hook after
+    sys._excepthook(exctype, value, traceback)
+    sys.exit(1)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     myapp = MyWin()
 
-    # Формуємо класи розкладу
-    # roz_osnov = Rozklad(r'2019_01_tmp_UTF-8.xml')   # не змінений розклад
-    # roz = Rozklad(r'2019_01_tmp_UTF-8.xml')
-    #
-    # roz.periods_count = len(roz.periods)
-    # roz.model = []
-    #
-    #
-    # fillTable(myapp.ui, roz)
-    # periods_count = len(roz.periods)
+    sys._excepthook = sys.excepthook
+    sys.excepthook = my_exception_hook
 
-    # print(addr_to_card( roz, "R4C4"))
-    # print(addr_to_dayPeriodTeach(roz, "R4C4"))
     myapp.show()
-    sys.exit(app.exec_())
+    # sys.exit(app.exec_())
+    try:
+        sys.exit(app.exec_())
+    except:
+        print("Exiting")

@@ -47,9 +47,9 @@ def id_to_card(roz, id):
 
     return None
 
-def rowCol_to_dayPeriod(roz, row, col):
-    day = col // roz.periods_count
-    period = col % roz.periods_count + 1
+def rowCol_to_dayPeriod(self, row, col):
+    day = col // self.roz.periods_count
+    period = col % self.roz.periods_count + 1
     teachId = "*" + str(row+1)
     return day, period, teachId
 
@@ -61,12 +61,12 @@ def rowCol_to_addr(roz, row, col):
     teachId = "*" + str(row + 1)
     return dayPeriodTeach_to_addr(roz, day, period, teachId)
 
-def rowCol_to_dayPeriodTeacher(roz, row, col):
-    day = col // roz.periods_count
-    period = col % roz.periods_count + 1
+def rowCol_to_dayPeriodTeacher(self, row, col):
+    day = col // self.roz.periods_count
+    period = col % self.roz.periods_count + 1
     teachId = "*" + str(row + 1)
     teacher = None
-    for t in roz.teachers:
+    for t in self.roz.teachers:
         if t.id == teachId:
             teacher = t
             break
