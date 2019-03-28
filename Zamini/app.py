@@ -8,10 +8,10 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, \
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import Qt, QModelIndex, QItemSelectionModel
 
-from ui.mainform import *
-from controls.control import *
-from controls.funcRozklad import *
-from models.rozklad import *
+from Zamini.ui.mainform import *
+from Zamini.controls.control import *
+from Zamini.controls.funcRozklad import *
+from Zamini.models.rozklad import *
 
 
 # import controls.funcRozklad as fr

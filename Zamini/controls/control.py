@@ -6,9 +6,9 @@ from controls.funcRozklad import rowCol_to_dayPeriod, dayPeriodTeach_to_addr, \
 from PyQt5.QtCore import Qt, QRect, QPoint, QModelIndex, QItemSelectionModel
 from PyQt5.QtGui import QPixmap
 
-from controls.funcRozklad import rowCol_to_dayPeriodTeacher
+from Zamini.controls.funcRozklad import rowCol_to_dayPeriodTeacher
 
-from controls.funcRozklad import card_to_tip
+from Zamini.controls.funcRozklad import card_to_tip
 
 
 def testFunc():
@@ -129,7 +129,10 @@ def card_to_cell(self, card, row, column):
         s = card.lesson.teacherInThisLesson[0].color
         r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
         self.ui.tableWidget.item(row, column).setBackground(QtGui.QColor(r, g, b))
+
         card.period, card.day, teacher = rowCol_to_dayPeriodTeacher(self, row, column)
+
+
 
 # Беремо зі списку й вилучаємо взятий елемент
 def list_to_card(self, row):
@@ -145,6 +148,8 @@ def list_to_card(self, row):
         self.roz.model.removeRow(self.ui.listView.selectedIndexes()[0].row())
         r = self.ui.listView.model().rowCount() - 1
         self.roz.lv_index = r
+
+
         return klas, card
 
 
@@ -181,12 +186,18 @@ def cell_clicked(self):
                 klas0, card0 = list_to_card(self, list_row)
 
         # Беремо вміст комірок з таблиць
+        #      Якщо це урок відсутнього вчителя, то вилучаємо його з картки
+
         klas, card = cell_to_card(self, row, column)
 
         # Вилучаємо з таблиць цю картку
         card_remove(self, card)
 
         # Записуємо до комірок таблиць
+        #       якщо урок учителя не відсутнього, то лише в його рядок
+
+        #       якщо урок відсутнього, то можна до іншого
+
         card_to_cell(self, card0, row, column)
 
         #   шукаємо інших вчителів цієї картки та додаємо їх також
@@ -200,6 +211,7 @@ def cell_clicked(self):
                     klas_d, card_d = cell_to_card(self, r, column)
                     card_to_list(self, card_d)
                 card_to_cell(self, card0, r, column)
+        #       вилучаємо до списку картки вчителів, до яких ставимо урок
 
 
 
