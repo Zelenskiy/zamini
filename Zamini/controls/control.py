@@ -188,7 +188,7 @@ def cell_clicked(self):
 
         klas, card = cell_to_card(self, row, column)
 
-        # Вилучаємо з таблиць цю картку
+        # Вилучаємо з таблиць цю картку ggg
         card_remove(self, card)
 
         # Записуємо до комірок таблиць
