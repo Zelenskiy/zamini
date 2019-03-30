@@ -1,242 +1,257 @@
 import sys
 
-from ui.mainform import *
-from PyQt5.QtWidgets import QApplication, QMainWindow, QAction,\
-                            QWidget, qApp
+# from PyQt5.QtGui import QStandardItemModel, QStandardItem, QColor
+from PyQt5.QtGui import QStandardItemModel
+from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, \
+    QWidget, qApp, QListWidgetItem
 
-from PyQt5 import QtCore,  QtWidgets
-from PyQt5.QtCore import Qt
+from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtCore import Qt, QModelIndex, QItemSelectionModel
 
-import controls.funcRozklad as fr
-import models.rozklad as rzkl
+from Zamini.ui.mainform import *
+from Zamini.controls.control import *
+from Zamini.controls.funcRozklad import *
+from Zamini.models.rozklad import *
+
+
+# import controls.funcRozklad as fr
+# import models.rozklad as rzkl
 
 
 class MyWin(QtWidgets.QMainWindow):
-
 
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.Dialog = QWidget(self, Qt.Window)
-        self.list_init()
+        self.whatEverColor = QColor(Qt.white)
 
         self.ui.radioButton.setChecked(True)
 
         self.mode = "view"
         self.oldClass = ""
+        self.boxCards = []
+        # roz.periods_count = 8
 
-        #self.list_init()
+        self.roz = Rozklad(r'2019_03_08_utf.xml')
 
-        #self.ui.tableWidget.setDragEnabled(True)
-        #self.ui.tableWidget.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
+        self.roz.periods_count = len(self.roz.periods)
 
+        fillTable(self, self.ui, self.roz)
+        periods_count = len(self.roz.periods)
 
-        # self.ui.tableWidget.setMouseTracking(True) #Щоб спрацьовувало при ненатиснутій кнопці
+        self.roz.model = QStandardItemModel()
 
-        #Тут описуємо події
+        # list_init(self, self.roz.model)
+
+        self.ui.listView.setModel(self.roz.model)
+        self.ui.tableWidget.setMouseTracking(True)
+
+        # Тут описуємо події
         self.ui.pushButton.clicked.connect(self.btn1_Click)
         self.ui.pushButton_2.clicked.connect(self.btn2_Click)
+        self.ui.pushButton_3.clicked.connect(self.btn3_Click)
         self.ui.pushButton_4.clicked.connect(self.btn4_Click)
+        self.ui.pushButton_7.clicked.connect(self.btn7_Click)
+        self.ui.pushButton_8.clicked.connect(self.btn8_Click)
+        self.ui.pushButton_6.clicked.connect(self.btn6_Click)
+
+
+
         self.ui.radioButton.clicked.connect(self.radioButton_Click)
-        self.ui.radioButton_2.clicked.connect(self.radioButton_Click)
+        self.ui.radioButton_2.clicked.connect(self.radioButton_2_Click)
 
-
-       # self.ui.tableWidget.mouseReleaseEvent = self.myMouseReleaseEvent
-        #self.ui.tableWidget.mousePressEvent = self.mousePressEvent
-
-        #self.ui.tableWidget.dragEnterEvent = self.dragEnterEvent
-        #self.ui.tableWidget.dropEvent = self.myDropEvent
-        #self.ui.tableWidget.startDrag = self.myStartDrag
-
-        #self.ui.tableWidget.setMouseTracking(True)
-        #self.ui.tableWidget.installEventFilter(self)
+        # self.ui.tableWidget.mousePressEvent = self.mousePressEvent
+        # self.ui.tableWidget.mouseReleaseEvent = self.mouseReleaseEvent
 
         self.ui.tableWidget.cellClicked.connect(self.cell_was_clicked)
 
-        #self.ui.tableWidget.mouseMoveEvent = self.mouseMoveEvent
+
+        self.ui.listView.clicked.connect(self.list_click)
+        # self.ui.listView.paintEvent = self.paintEvent
+
+
+        self.ui.comboBox.activated.connect(self.comboBox_click)
+
+        # self.Dialog.listView.itemClicked.connect(self.item_clicked)
+
+        # self.ui.tableWidget.cellEntered.connect(self.cellHover)
+
+        self.ui.scrollArea_2.setVisible(False)
+        self.ui.tableWidget2.setVisible(False)
+
+    # def paintEvent(self,event):
+    #     print ("paintEvent")
+
+    # def mousePressEvent(self, event):
+    #     super().mousePressEvent(event)
+    #     if event.buttons() == Qt.LeftButton:
+    #         print ("left")
+    #     else:
+    #         print("right")
+
+    #
+    # def mouseReleaseEvent(self, event):
+    #     if event.buttons() == Qt.LeftButton:
+    #         print("left")
+    #     else:
+    #         print("right")
+    #
+    #     super().mouseReleaseEvent(event)
+    #     cell_clicked(self, self.roz)
+
+    # if event.buttons() == Qt.LeftButton:
+    #     cell_clicked(self, self.roz)
+
+    def comboBox_click(self):
+        # Вибираємо уроки відсутнього вчителя
+        print(self.ui.comboBox.currentText())  # Працює
+        # Виділяємо вчителя в таблиці
+
+        self.ui.tableWidget.item(1, 0).setBackground(QColor(100, 100, 150))
+
+        for i in range(0, 10):
+            if self.ui.tableWidget.item(1, i) != None:
+                self.ui.tableWidget.item(1, i).setBackground(QColor(100, 50, 150))
+
+
+
+    def cell_was_clicked(self, row, column):
+        # print ("hohohohoho")
+        # print(row, "   ", column)
+        cell_clicked(self)  # Клацнули таблицю розкладу вчителів лівою кн. мишки
+
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Escape:
+            print("pressed key " + str(event.key()))
+            self.roz.lv_index = -1
+            ix = self.ui.listView.model().index(-1, 0)
+            self.ui.listView.selectionModel().setCurrentIndex(ix, QItemSelectionModel.ClearAndSelect)
+            self.ui.pushButton_4.setText("")
+            QApplication.setOverrideCursor(Qt.ArrowCursor)
+
+    def cellHover(self, row, column):
+        print("========================")
+        self.ui.tableWidget.setToolTip("")
+
+    def list_click(self):
+        # Запам'ятовуємо номер вибраного рядка
+        self.roz.lv_index = self.ui.listView.selectedIndexes()[0].row()
+        s = self.ui.listView.model().item(self.roz.lv_index).text()
+        kl = ["", ""]
+        kl = s.split("&")
+        kl[0] = kl[0].rstrip()
+        kl[1] = kl[1].rstrip()
+        id = kl[1]
+        card = id_to_card(self.roz, id)
+        s = card.lesson.subjInThisLesson[0].short + "; " + \
+            card.lesson.teacherInThisLesson[0].short
+        self.ui.listView.setToolTip(s)
+
+        self.ui.pushButton_4.setText(kl[0])
+        mySetCursor(self, kl[0])
+        # Встановлюємо підказку для вибраного рядка
+
+        # self.ui.pushButton_4.setText("")
+        # print ("======================== ", self.roz.lv_index)
 
     def eventFilter(self, source, event):
-        print(event.type()," ")
-        if (event.type() ==  QtCore.QEvent.MouseMove) and (source==self.ui.tableWidget):
+        print(event.type(), " ")
+        if (event.type() == QtCore.QEvent.MouseMove) and (source == self.ui.tableWidget):
             pos = event.pos()
             print('mouse move: (%d, %d)' % (pos.x(), pos.y()))
         return True
 
-    def cell_was_clicked(self, row, column):
-        # Вилучаємо вміст вибраної комірки
-        if self.mode == "edit":
-            print("sss  ",end="")
-            #
-            #   вилучаємо вміст
-            k = self.ui.tableWidget.item(row, column)
-            if k == None:
-                k = ""
-            else:
-                k = k.text()
-            print (k)
-            kl = QtWidgets.QTableWidgetItem(self.oldClass)
-            self.ui.tableWidget.setItem(row, column, kl)
-            #   записуємо до комірки низ зписку
-            if self.Dialog.listWidget.count() == 0:
-                ss = self.Dialog.listWidget.currentRow()
-                if ss != -1:
-                    kl = QtWidgets.QTableWidgetItem(ss)
-                    self.ui.tableWidget.setItem(row, column, kl)
-
-                    #!!!!!!!!!!!
-
-            #   записуємо вилучене до низу списку
-            if k !="":
-                item = QtWidgets.QListWidgetItem(k)
-                self.Dialog.listWidget.addItem(item)
-                self.oldClass = item.text()
-            else:
-                self.oldClass =""
-
-
-
-
-        else:
-            print("Row %d and Column %d was clicked" % (row, column))
-            r, g, b = 255, 255, 255
-            item = self.ui.tableWidget.item(row, column)
-            if item != None:
-                cl = roz.dopTable.get("R"+str(row)+"C"+str(column))
-                ls = ""
-                for s in cl.subjInThisLesson:
-                    ls = ls + s.name
-                self.ui.label.setText(ls)
-                self.ui.pushButton_4.setText(item.text())
-                s = cl.teacherInThisLesson[0].color
-                r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
-            else:
-                self.ui.pushButton_4.setText("")
-                self.ui.label.setText("")
-
-
-            self.ui.pushButton_4.setStyleSheet("background-color: rgb("+str(r)+","+str(g)+","+str(b)+")")
-
-    """
-    def myDropEvent(self, event):
-        print("myDropEvent (%s)" % event.pos())
-        #super().DropEvent(event)
-        super(self.ui.tableWidget).dropEvent(event)
-
-
-    def myStartDrag(self, event):
-        print("myStartDrag")
-
-    def dropEvent(self, event):
-        print("Закнчили тягнути")
-
-    def myMouseReleaseEvent(self, event):
-        print("Відпустили кнопку мишки")
-
-
-
-    def mouseMoveEvent(self, event):
-
-        if event.buttons() == QtCore.Qt.NoButton:
-            print("Simple mouse motion", event.pos())
-
-        elif event.buttons() == QtCore.Qt.LeftButton:
-            print("Left click drag")
-        elif event.buttons() == QtCore.Qt.RightButton:
-            print  ("Right click drag")
-
-        super()
-
-
-
-    def table_Move(self):
-        print("ssss")
-    """
-
     def radioButton_Click(self):
-        fr.fillTable(myapp.ui, roz)
+        fillTable(self, self.ui, self.roz)
 
     def radioButton_2_Click(self):
-        fr.fillTable(myapp.ui, roz)
+        fillTable(self, self.ui, self.roz)
 
     def btn1_Click(self):
-        #self.list_show()
-        print("")
+        self.ui.tableWidget2.setVisible(not self.ui.tableWidget2.isVisible())
+
+    def btn6_Click(self):
+        print("=============")
+        print(self.ui.listWidget.item(self.ui.listWidget.currentRow()).text())
+
+        # for item in range(self.ui.listWidget.count()):
+        #     print(self.ui.listWidget.item(item).text())
+
+
+    def btn8_Click(self):
+        if self.ui.listWidget.selectedItems() != []:
+            self.ui.listWidget.takeItem(self.ui.listWidget.currentRow())
+
+
+    def btn7_Click(self):
+        if self.ui.comboBox.currentText() != "-------":
+            item = QListWidgetItem(self.ui.comboBox.currentText())
+            it = self.ui.listWidget.findItems(self.ui.comboBox.currentText(), Qt.MatchExactly)
+            if len(it) == 0:
+                self.ui.listWidget.addItem(item)
+
 
     def btn2_Click(self):
-        print("")
+        for c in self.roz.cards:
+            # print(c.id)
+            if str(c.id) == '*17':
+                print(c.lesson.classInThisLesson[0].short)
+                c.lesson.classInThisLesson[0].short = "qqq"
+                print(c.lesson.classInThisLesson[0].short)
+                break
+
+
+
+    def btn3_Click(self):
+        if self.ui.listView.model().rowCount() > 0:
+            print("Вибрано елемент: ", self.Dialog.listView.selectedIndexes()[0].row())  # Працює
+            print(self.ui.listView.model().item(0).text())  # Працює
+            self.ui.listView.model().removeRows(0, 1)  # Працює
+
     def item_clicked(item):
-        #n = item.text()
+        # n = item.text()
         # value = self.Dialog.listWidget.model().data(0)
 
-        #print(n)
+        # print(n)
         print("----")
 
     def btn4_Click(self):
-        self.ui.pushButton_4.setStyleSheet("font-weight: bold; background-color:yellow;")
-        self.mode = "edit"
-        self.Dialog.setGeometry(myapp.pos().x()+myapp.width()+5, myapp.pos().y()+27,300,myapp.height())
-        item = QtWidgets.QListWidgetItem(self.ui.pushButton_4.text())
-        self.Dialog.listWidget.addItem(item)
-        self.Dialog.listWidget.currentRow = 0
-
-        self.list_show()
-        print("44444")
+        if self.mode != "edit":
+            self.ui.pushButton_4.setStyleSheet("font-weight: bold; background-color:yellow;")
+            self.mode = "edit"
+            self.ui.scrollArea_2.setVisible(True)
+            # self.Dialog.setGeometry(myapp.pos().x()+myapp.width()+5, myapp.pos().y()+27,110,myapp.height())
+            # item = QtWidgets.QListWidgetItem(self.ui.pushButton_4.text())
+            # self.Dialog.listWidget.addItem(item)
+            # self.Dialog.listWidget.currentRow = 0
+        else:
+            self.mode = "view"
+            self.ui.scrollArea_2.setVisible(False)
+            QApplication.setOverrideCursor(Qt.ArrowCursor)
+        self.roz.lv_index = (self.roz.model.rowCount()) - 1
 
     def list_show(self):
-        self.Dialog.show()
+        self.ui.listView.setVisible(True)
 
-    def list_init(self):
-        self.Dialog.resize(265, 300)
-        self.Dialog.verticalLayout = QtWidgets.QVBoxLayout(self.Dialog)
-        self.Dialog.verticalLayout.setObjectName("verticalLayout")
-        self.Dialog.listWidget = QtWidgets.QListWidget(self.Dialog)
-        self.Dialog.listWidget.setObjectName("listWidget")
-        self.Dialog.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.Dialog.verticalLayout.addWidget(self.Dialog.listWidget)
+def my_exception_hook(exctype, value, traceback):
+    # Print the error and traceback
+    print(exctype, value, traceback)
+    # Call the normal Exception hook after
+    sys._excepthook(exctype, value, traceback)
+    sys.exit(1)
 
-        self.Dialog.horizontalLayout.setObjectName("horizontalLayout")
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.Dialog.horizontalLayout.addItem(spacerItem)
-        self.Dialog.pushButton = QtWidgets.QPushButton(self.Dialog)
-        self.Dialog.pushButton.setMaximumSize(QtCore.QSize(40, 16777215))
-        self.Dialog.pushButton.setObjectName("pushButton")
-        self.Dialog.horizontalLayout.addWidget(self.Dialog.pushButton)
-        self.Dialog.pushButton_2 = QtWidgets.QPushButton(self.Dialog)
-        self.Dialog.pushButton_2.setMaximumSize(QtCore.QSize(40, 16777215))
-        self.Dialog.pushButton_2.setObjectName("pushButton_2")
-        self.Dialog.horizontalLayout.addWidget(self.Dialog.pushButton_2)
-        self.Dialog.verticalLayout.addLayout(self.Dialog.horizontalLayout)
-
-        self.Dialog.listWidget.itemClicked.connect(self.item_clicked)
-
-        self.Dialog.pushButton.setText("1")
-        self.Dialog.pushButton_2.setText("2")
-
-
-
-
-        # item = QtWidgets.QListWidgetItem("ss")
-        # self.Dialog.listWidget.addItem (item)
-        # self.Dialog.listWidget.addItem (item)
-        # self.Dialog.listWidget.addItem (item)
-        # self.Dialog.listWidget.addItem (item)
-        # self.Dialog.listWidget.addItem (item)
-        #Dialog.show()
-
-
-if __name__=="__main__":
+if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     myapp = MyWin()
 
-
-
-    #Формуємо класи розкладу
-    roz = rzkl.Rozklad(r'2019_01_tmp_UTF-8.xml')
-    fr.fillTable(myapp.ui, roz)
-
-
-
+    sys._excepthook = sys.excepthook
+    sys.excepthook = my_exception_hook
 
     myapp.show()
-    sys.exit(app.exec_())
+    # sys.exit(app.exec_())
+    try:
+        sys.exit(app.exec_())
+    except:
+        print("Exiting")
