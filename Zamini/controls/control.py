@@ -46,7 +46,7 @@ begin
 end;
     
     """
-
+# sdafasdfasdf
 
 def mySetCursor(self, text):
     if text != "":
@@ -184,37 +184,48 @@ def cell_clicked(self):
                 klas0, card0 = list_to_card(self, list_row)
 
         # Беремо вміст комірок з таблиць
-        #      Якщо це урок відсутнього вчителя, то вилучаємо його з картки
+
 
         klas, card = cell_to_card(self, row, column)
+
+
 
         # Вилучаємо з таблиць цю картку ggg
         card_remove(self, card)
 
         # Записуємо до комірок таблиць
-        #       якщо урок учителя не відсутнього, то лише в його рядок
-
-        #       якщо урок відсутнього, то можна до іншого
         if card0 != None:
             for t in card0.lesson.teacherInThisLesson:
                 f = False
                 if t.id == "*" + str(row + 1):
                     f = True
                     break
-            if f:
-                card_to_cell(self, card0, row, column)
 
-                #   шукаємо інших вчителів цієї картки та додаємо їх також
-                if card0 != None:
-                    for t in card0.lesson.teacherInThisLesson:
-                        r = int(t.id[1:]) - 1  # номер рядка вчителя
-                        if r == row:
-                            continue
-                        item = self.ui.tableWidget2.item(r, column)
-                        if item != None:
-                            klas_d, card_d = cell_to_card(self, r, column)
-                            card_to_list(self, card_d)
-                        card_to_cell(self, card0, r, column)
+                if f:
+
+                    #       якщо урок відсутнього, то можна до іншого
+
+                    #       якщо урок учителя не відсутнього, то лише в його рядок
+
+                    card_to_cell(self, card0, row, column)
+                    # -----
+                    #      Якщо це урок відсутнього вчителя, то вилучаємо його з картки
+
+
+                    card0.lesson.teacherInThisLesson.remove(t)
+                    # -----
+
+                    #   шукаємо інших вчителів цієї картки та додаємо їх також
+                    if card0 != None:
+                        for t in card0.lesson.teacherInThisLesson:
+                            r = int(t.id[1:]) - 1  # номер рядка вчителя
+                            if r == row:
+                                continue
+                            item = self.ui.tableWidget2.item(r, column)
+                            if item != None:
+                                klas_d, card_d = cell_to_card(self, r, column)
+                                card_to_list(self, card_d)
+                            card_to_cell(self, card0, r, column)
                 #       вилучаємо до списку картки вчителів, до яких ставимо урок
 
             else:
@@ -238,7 +249,10 @@ def cell_clicked(self):
             self.ui.label.setText(ls)
             self.ui.tableWidget.setToolTip(card_to_tip(card))
             self.ui.pushButton_4.setText(cs)
-            s = card.lesson.teacherInThisLesson[0].color
+            if card != None:
+                s = card.lesson.teacherInThisLesson[0].color
+            else:
+                s = "#FFFFFF"
             r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
         else:
             self.ui.pushButton_4.setText("")
