@@ -145,11 +145,15 @@ class MyWin(QtWidgets.QMainWindow):
         kl[1] = kl[1].rstrip()
         id = kl[1]
         card = id_to_card(self.roz, id)
-        s = card.lesson.subjInThisLesson[0].short + "; " + \
-            card.lesson.teacherInThisLesson[0].short
-        self.ui.listView.setToolTip(s)
+        if card != None:
+            if card.lesson.teacherInThisLesson != None:
+                s = card.lesson.subjInThisLesson[0].short + "; " + \
+                    card.lesson.teacherInThisLesson[0].short
+            else:
+                s = card.lesson.subjInThisLesson[0].short
+            self.ui.listView.setToolTip(s)
 
-        self.ui.pushButton_4.setText(kl[0])
+            self.ui.pushButton_4.setText(kl[0])
         mySetCursor(self, kl[0])
         # Встановлюємо підказку для вибраного рядка
 

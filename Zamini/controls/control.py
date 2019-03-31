@@ -195,37 +195,39 @@ def cell_clicked(self):
 
         # Записуємо до комірок таблиць
         if card0 != None:
+            f = False
             for t in card0.lesson.teacherInThisLesson:
-                f = False
+
                 if t.id == "*" + str(row + 1):
                     f = True
                     break
 
-                if f:
+            if f:
 
-                    #       якщо урок відсутнього, то можна до іншого
+               #       якщо урок відсутнього, то можна до іншого
 
-                    #       якщо урок учителя не відсутнього, то лише в його рядок
+               #       якщо урок учителя не відсутнього, то лише в його рядок
 
-                    card_to_cell(self, card0, row, column)
-                    # -----
-                    #      Якщо це урок відсутнього вчителя, то вилучаємо його з картки
+               card_to_cell(self, card0, row, column)
+               # -----
+               #      Якщо це урок відсутнього вчителя, то вилучаємо його з картки
 
 
-                    card0.lesson.teacherInThisLesson.remove(t)
-                    # -----
+               # card0.lesson.teacherInThisLesson.remove(t)
 
-                    #   шукаємо інших вчителів цієї картки та додаємо їх також
-                    if card0 != None:
-                        for t in card0.lesson.teacherInThisLesson:
-                            r = int(t.id[1:]) - 1  # номер рядка вчителя
-                            if r == row:
-                                continue
-                            item = self.ui.tableWidget2.item(r, column)
-                            if item != None:
-                                klas_d, card_d = cell_to_card(self, r, column)
-                                card_to_list(self, card_d)
-                            card_to_cell(self, card0, r, column)
+               # -----
+
+               #   шукаємо інших вчителів цієї картки та додаємо їх також
+               if card0 != None:
+                   for t in card0.lesson.teacherInThisLesson:
+                       r = int(t.id[1:]) - 1  # номер рядка вчителя
+                       if r == row:
+                           continue
+                       item = self.ui.tableWidget2.item(r, column)
+                       if item != None:
+                           klas_d, card_d = cell_to_card(self, r, column)
+                           card_to_list(self, card_d)
+                       card_to_cell(self, card0, r, column)
                 #       вилучаємо до списку картки вчителів, до яких ставимо урок
 
             else:
