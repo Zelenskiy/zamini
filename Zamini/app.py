@@ -1,21 +1,21 @@
 import sys
 
-# from PyQt5.QtGui import QStandardItemModel, QStandardItem, QColor
+
+
 from PyQt5.QtGui import QStandardItemModel
-from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, \
-    QWidget, qApp, QListWidgetItem
+from PyQt5.QtWidgets import QListWidgetItem
 
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtCore import Qt, QModelIndex, QItemSelectionModel
+from uii.mainform import *
+from controls.control import *
+from controls.funcRozklad import *
+from models.rozklad import *
+# from Zamini.ui.mainform import *
+# from Zamini.controls.control import *
+# from Zamini.controls.funcRozklad import *
+# from Zamini.models.rozklad import *
 
-from Zamini.ui.mainform import *
-from Zamini.controls.control import *
-from Zamini.controls.funcRozklad import *
-from Zamini.models.rozklad import *
 
 
-# import controls.funcRozklad as fr
-# import models.rozklad as rzkl
 
 
 class MyWin(QtWidgets.QMainWindow):
@@ -24,8 +24,8 @@ class MyWin(QtWidgets.QMainWindow):
         QtWidgets.QWidget.__init__(self, parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.Dialog = QWidget(self, Qt.Window)
-        self.whatEverColor = QColor(Qt.white)
+        # self.Dialog = QWidget(self, Qt.Window)
+        self.whatEverColor = QColor(255, 255, 255)
 
         self.ui.radioButton.setChecked(True)
 

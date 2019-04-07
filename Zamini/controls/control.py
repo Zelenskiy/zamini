@@ -1,14 +1,15 @@
 from PyQt5 import QtCore, QtWidgets, QtGui
 
-from PyQt5.QtGui import QStandardItem, QPainter, QFont, QColor
-from controls.funcRozklad import rowCol_to_dayPeriod, dayPeriodTeach_to_addr, \
-    rowCol_to_addr, addr_to_dayPeriodTeach, getForCard, id_to_card
-from PyQt5.QtCore import Qt, QRect, QPoint, QModelIndex, QItemSelectionModel
-from PyQt5.QtGui import QPixmap
+# from PyQt5 import QStandardItem, QPainter, QFont, QColor
+from PyQt5.QtCore import QPoint, QRect, QItemSelectionModel, Qt
+from PyQt5.QtGui import QStandardItem, QPixmap, QPainter, QColor, QFont
+from controls.funcRozklad import id_to_card
+# from PyQt5 import Qt, QRect, QPoint, QItemSelectionModel
+# from PyQt5 import QPixmap
 
-from Zamini.controls.funcRozklad import rowCol_to_dayPeriodTeacher
 
-from Zamini.controls.funcRozklad import card_to_tip
+from controls.funcRozklad import card_to_tip, rowCol_to_dayPeriodTeacher
+# from Zamini.controls.funcRozklad import card_to_tip, rowCol_to_dayPeriodTeacher
 
 
 def testFunc():
@@ -190,48 +191,43 @@ def cell_clicked(self):
 
 
 
-        # Вилучаємо з таблиць цю картку ggg
+        # Вилучаємо з таблиць цю картку
         card_remove(self, card)
 
         # Записуємо до комірок таблиць
         if card0 != None:
             f = False
             for t in card0.lesson.teacherInThisLesson:
-
                 if t.id == "*" + str(row + 1):
                     f = True
                     break
-
             if f:
+                #       якщо урок учителя не відсутнього, то лише в його рядок
+                card_to_cell(self, card0, row, column)
 
-               #       якщо урок відсутнього, то можна до іншого
-
-               #       якщо урок учителя не відсутнього, то лише в його рядок
-
-               card_to_cell(self, card0, row, column)
-               # -----
-               #      Якщо це урок відсутнього вчителя, то вилучаємо його з картки
-
-
-               # card0.lesson.teacherInThisLesson.remove(t)
-
-               # -----
-
-               #   шукаємо інших вчителів цієї картки та додаємо їх також
-               if card0 != None:
-                   for t in card0.lesson.teacherInThisLesson:
-                       r = int(t.id[1:]) - 1  # номер рядка вчителя
-                       if r == row:
-                           continue
-                       item = self.ui.tableWidget2.item(r, column)
-                       if item != None:
-                           klas_d, card_d = cell_to_card(self, r, column)
-                           card_to_list(self, card_d)
-                       card_to_cell(self, card0, r, column)
-                #       вилучаємо до списку картки вчителів, до яких ставимо урок
+                #   шукаємо інших вчителів цієї картки та додаємо їх також
+                for t in card0.lesson.teacherInThisLesson:
+                   r = int(t.id[1:]) - 1  # номер рядка вчителя
+                   if r == row:
+                       continue
+                   item = self.ui.tableWidget2.item(r, column)
+                   if item != None:
+                       klas_d, card_d = cell_to_card(self, r, column)
+                       card_to_list(self, card_d)
+                   card_to_cell(self, card0, r, column)
+             #       вилучаємо до списку картки вчителів, до яких ставимо урок
 
             else:
-                #  повертаємо назад до списку
+                #       якщо урок відсутнього, то можна до іншого
+
+                # -----
+                #      Якщо це урок відсутнього вчителя, то вилучаємо його з картки
+
+                # card0.lesson.teacherInThisLesson.remove(t)
+
+                # -----
+
+                #  Якщо поставити не вдалося, повертаємо картку назад до списку
                 card_to_list(self, card0)
 
         # Записуємо до списку
@@ -247,7 +243,7 @@ def cell_clicked(self):
                 ls = ls + s.short
             cs = ""
             for c in card.lesson.classInThisLesson:
-                cs = cs + c.short
+                cs += c.short
             self.ui.label.setText(ls)
             self.ui.tableWidget.setToolTip(card_to_tip(card))
             self.ui.pushButton_4.setText(cs)
