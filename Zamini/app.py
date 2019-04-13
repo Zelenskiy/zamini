@@ -1,11 +1,11 @@
 import sys
 
-
-
+from PyQt5 import QtCore
+from PyQt5.QtCore import QItemSelectionModel
 from PyQt5.QtGui import QStandardItemModel
-from PyQt5.QtWidgets import QListWidgetItem
+from PyQt5.QtWidgets import QListWidgetItem, QApplication
 
-from uii.mainform import *
+from views.mainform import *
 from controls.control import *
 from controls.funcRozklad import *
 from models.rozklad import *
@@ -13,9 +13,8 @@ from models.rozklad import *
 # from Zamini.controls.control import *
 # from Zamini.controls.funcRozklad import *
 # from Zamini.models.rozklad import *
-
-
-
+from Zamini.controls.control import cell_clicked, mySetCursor
+from Zamini.controls.funcRozklad import id_to_card
 
 
 class MyWin(QtWidgets.QMainWindow):
@@ -129,7 +128,8 @@ class MyWin(QtWidgets.QMainWindow):
             ix = self.ui.listView.model().index(-1, 0)
             self.ui.listView.selectionModel().setCurrentIndex(ix, QItemSelectionModel.ClearAndSelect)
             self.ui.pushButton_4.setText("")
-            QApplication.setOverrideCursor(Qt.ArrowCursor)
+            # QApplication.setOverrideCursor(Qt.ArrowCursor)
+            mySetCursor(self, "")
 
     def cellHover(self, row, column):
         print("========================")
@@ -154,7 +154,9 @@ class MyWin(QtWidgets.QMainWindow):
             self.ui.listView.setToolTip(s)
 
             self.ui.pushButton_4.setText(kl[0])
-        mySetCursor(self, kl[0])
+            mySetCursor(self, kl[0])
+        else:
+            mySetCursor(self, "")
         # Встановлюємо підказку для вибраного рядка
 
         # self.ui.pushButton_4.setText("")

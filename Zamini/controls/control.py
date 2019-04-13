@@ -3,12 +3,8 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 # from PyQt5 import QStandardItem, QPainter, QFont, QColor
 from PyQt5.QtCore import QPoint, QRect, QItemSelectionModel, Qt
 from PyQt5.QtGui import QStandardItem, QPixmap, QPainter, QColor, QFont
-from controls.funcRozklad import id_to_card
-# from PyQt5 import Qt, QRect, QPoint, QItemSelectionModel
-# from PyQt5 import QPixmap
 
-
-from controls.funcRozklad import card_to_tip, rowCol_to_dayPeriodTeacher
+from controls.funcRozklad import card_to_tip, rowCol_to_dayPeriodTeacher, id_to_card
 # from Zamini.controls.funcRozklad import card_to_tip, rowCol_to_dayPeriodTeacher
 
 
@@ -169,6 +165,8 @@ def card_to_list(self, card):
             ix = self.ui.listView.model().index(r, 0)
             self.ui.listView.selectionModel().setCurrentIndex(ix, QItemSelectionModel.ClearAndSelect)
         mySetCursor(self, klas)
+    else:
+        mySetCursor(self, "")
 
 
 def cell_clicked(self):
