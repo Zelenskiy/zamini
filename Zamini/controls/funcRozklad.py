@@ -177,7 +177,8 @@ def fillTable(self, ui, roz):
             ui.tableWidget2.setItem(row, col, QtWidgets.QTableWidgetItem(c.id))
             s = t.color
             r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
-            ui.tableWidget.item(row, col).setBackground(QtGui.QColor(r, g, b))
+            if ui.tableWidget.item(row, col) != None:
+                ui.tableWidget.item(row, col).setBackground(QtGui.QColor(r, g, b))
             #roz.dopTable[row][col] = c
             #roz.dopTable["R"+str(row)+"C"+str(col)] = c
 
