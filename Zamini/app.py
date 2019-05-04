@@ -1,20 +1,21 @@
 import sys
 
-from PyQt5 import QtCore
-from PyQt5.QtCore import QItemSelectionModel
-from PyQt5.QtGui import QStandardItemModel
+from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtCore import QItemSelectionModel, Qt
+from PyQt5.QtGui import QStandardItemModel, QColor
 from PyQt5.QtWidgets import QListWidgetItem, QApplication
 
-from views.mainform import *
-from controls.control import *
-from controls.funcRozklad import *
-from models.rozklad import *
+from ui_m.mainform import *
+# from controls.control import *
+# from controls.funcRozklad import *
+# from models.rozklad import *
 # from Zamini.ui.mainform import *
 # from Zamini.controls.control import *
 # from Zamini.controls.funcRozklad import *
 # from Zamini.models.rozklad import *
-from Zamini.controls.control import cell_clicked, mySetCursor
-from Zamini.controls.funcRozklad import id_to_card
+from controls.control import cell_clicked, mySetCursor
+from controls.funcRozklad import id_to_card, fillTable
+from models.rozklad import Rozklad
 
 
 class MyWin(QtWidgets.QMainWindow):

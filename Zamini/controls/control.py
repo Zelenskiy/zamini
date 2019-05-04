@@ -123,12 +123,13 @@ def card_to_cell(self, card, row, column):
         t = QtWidgets.QTableWidgetItem(cl)
         self.ui.tableWidget.setItem(row, column, t)
         self.ui.tableWidget2.setItem(row, column, QtWidgets.QTableWidgetItem(card.id))
-        s = card.lesson.teacherInThisLesson[0].color
-        r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
-        self.ui.tableWidget.item(row, column).setBackground(QtGui.QColor(r, g, b))
+        if card.lesson.teacherInThisLesson[0] != None:  #перестрахуємося на випадок, якщо немає в картці вчителів
+            s = card.lesson.teacherInThisLesson[0].color    #змінюємо колір комірки на колір вчителя
+            r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
+            self.ui.tableWidget.item(row, column).setBackground(QtGui.QColor(r, g, b))
 
         card.period, card.day, teacher = rowCol_to_dayPeriodTeacher(self, row, column)
-
+        # self.ui.label_2.setText("День-"+str(card.day)+" Урок-"+str(card.period))
 
 # Беремо зі списку й вилучаємо взятий елемент
 def list_to_card(self, row):
@@ -204,6 +205,7 @@ def cell_clicked(self):
                 card_to_cell(self, card0, row, column)
 
                 #   шукаємо інших вчителів цієї картки та додаємо їх також
+                #   не працює із зведеними класами
                 for t in card0.lesson.teacherInThisLesson:
                    r = int(t.id[1:]) - 1  # номер рядка вчителя
                    if r == row:
@@ -214,6 +216,9 @@ def cell_clicked(self):
                        card_to_list(self, card_d)
                    card_to_cell(self, card0, r, column)
              #       вилучаємо до списку картки вчителів, до яких ставимо урок
+                # проходимо по таблиці, і знайшовщи відповідний клас, переносимо його урок до списку
+                # з таблиці ж прибираємо
+                for r in range(0,)
 
             else:
                 #       якщо урок відсутнього, то можна до іншого
@@ -226,6 +231,7 @@ def cell_clicked(self):
                 # -----
 
                 #  Якщо поставити не вдалося, повертаємо картку назад до списку
+                pass
                 card_to_list(self, card0)
 
         # Записуємо до списку
@@ -258,187 +264,187 @@ def cell_clicked(self):
         self.ui.pushButton_4.setStyleSheet("background-color: rgb(" + str(r) + "," + str(g) + "," + str(b) + ")")
 
 
-def _cell_clicked(self):
-    roz = self.roz
-    row = self.ui.tableWidget.currentRow()
-    column = self.ui.tableWidget.currentColumn()
-
-    if self.mode == "edit":
-        # Записуємо значення комірки до тимчасової змінної
-        tmp = self.ui.tableWidget.item(row, column)
-        tmp2 = self.ui.tableWidget2.item(row, column)
-        if tmp == None:
-            tmp = ""
-            tmp2 = ""
-        else:
-            tmp = tmp.text()
-            tmp2 = tmp2.text()
-            #   Вилучаємо ім'я вчителя з картки
-            c = id_to_card(self.roz, tmp2)
-            if c != None:
-                c.period, c.day, teacher = rowCol_to_dayPeriodTeacher(roz, row, column)
-                # вилучатимемо вчителя лише коли він у відсутніх
-                for i, t in enumerate(c.lesson.teacherInThisLesson):
-                    if t.id == teacher.id:
-                        c.lesson.teacherInThisLesson.remove(t)
-
-        mySetCursor(self, tmp)
-
-        # Записуємо до комірки значення зі списку
-
-        self.ui.pushButton_4.setText(tmp)
-        kl = ["", ""]
-        kli = ["", ""]
-        if roz.lv_index > -1:
-            klAll = QtWidgets.QTableWidgetItem(self.ui.listView.model().item(self.roz.lv_index).text())
-            klAll = klAll.text()
-            kl = klAll.split("&")
-            kl[0] = kl[0].rstrip()
-            kl[1] = kl[1].rstrip()
-
-            kli[0] = QtWidgets.QTableWidgetItem(kl[0])
-            kli[1] = QtWidgets.QTableWidgetItem(kl[1])
-        else:
-            kli[0] = QtWidgets.QTableWidgetItem("")
-            kli[1] = QtWidgets.QTableWidgetItem("")
-
-        # Тут перевіримо, чи можна ставити. Якщо інший вчитель, то тільки урок відсутнього вчителя
-        c = id_to_card(self.roz, kl[1])
-        # визначаємо вчителя відсутнього з вибраному в списку
-        teach = self.ui.listWidget.item(self.ui.listWidget.currentRow()).text()
-
-        self.ui.tableWidget.setItem(row, column, kli[0])
-
-        if c != None:
-            if len(c.lesson.teacherInThisLesson) > 0:
-                s = c.lesson.teacherInThisLesson[0].color
-            else:
-                s = "#FFFFFF"
-            r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
-            self.ui.tableWidget.item(row, column).setBackground(QtGui.QColor(r, g, b))
-            # Шукаємо за  id картку уроку та змінюємо в ній day, period
-            c.period, c.day, teacher = rowCol_to_dayPeriodTeacher(roz, row, column)
-            f = 0
-            for t in c.lesson.teacherInThisLesson:
-                if t == teacher:
-                    f = 1
-                    break
-            if f == 0:
-                c.lesson.teacherInThisLesson.append(teacher)
-            self.ui.tableWidget.setToolTip(card_to_tip(c))
-        self.ui.tableWidget2.setItem(row, column, kli[1])
-        #           проходимо по стовпчику і вилучаємо картки з даним класом до списку
-        #   тут не класи треба, а вчителів звільнять теж
-        for r in range(0, len(roz.teachers) - 1):
-            if r == row:
-                continue
-            if kl[0] != "":
-                if self.ui.tableWidget.item(r, column) != None:
-                    s1 = self.ui.tableWidget.item(r, column).text()
-                    if s1.strip() == kl[0].strip():
-                        k_l = self.ui.tableWidget2.item(r, column)
-                        if k_l == None:
-                            k_l = ""
-                        else:
-                            k_l = k_l.text()
-                        roz.model.appendRow(QStandardItem(kl[0] + "                        &" + k_l))
-                        k_l = QtWidgets.QTableWidgetItem("")
-                        self.ui.tableWidget.setItem(r, column, k_l)
-
-                        self.ui.tableWidget2.setItem(r, column, k_l)
-            #    тепер перевіримо вчителів, що йдуть в парі
-
-        # Вилучаємо зі списку зчитане значення
-        roz.model.removeRow(self.roz.lv_index)
-
-        # #           проходимо по стовпчику і вилучаємо картки з даною групою/класом до списку
-        # if self.ui.tableWidget2.item(row, column) != None:
-        #     s1 = self.ui.tableWidget2.item(row, column).text().strip()
-        # else:
-        #     s1 = ""
-        # gr0 = cardId_to_groupId(roz, s1)
-        # for r in range(0, len(roz.teachers) - 1):
-        #     if r == row:
-        #         continue
-        #     if self.ui.tableWidget2.item(r, column) != None:
-        #         s1 = self.ui.tableWidget2.item(r, column).text()
-        #         # Шукаємо картку
-        #         gr = cardId_to_groupId(roz, sl)
-        #         if equGrups(gr0, gr):
-        #             pass
-        #
-        #
-        #
-        #
-        #
-        #         # roz.model.appendRow(QStandardItem(kl[0] + "                        &" + k_l))
-        #         # k_l = QtWidgets.QTableWidgetItem("")
-        #         # self.ui.tableWidget.setItem(r, column, k_l)
-        #         #
-        #         # self.ui.tableWidget2.setItem(r, column, k_l)
-        #
-        # # Вилучаємо зі списку зчитане значення
-        # roz.model.removeRow(self.roz.lv_index)
-
-        if self.roz.lv_index > roz.model.rowCount() - 1:
-            self.roz.lv_index = roz.model.rowCount() - 1
-        if self.roz.lv_index > -1:
-            tmp2 = self.ui.listView.model().item(self.roz.lv_index).text()
-            if tmp2.index("&") > -1:
-                x, y = tmp2.split("&")
-            else:
-                x = tmp2
-                y = ""
-            x = x.rstrip()
-            self.ui.pushButton_4.setText(x)
-        else:
-            y = tmp2
-        # Записуємо до списку значення, яке на початку було в комірці
-        if tmp != "":
-            roz.model.appendRow(QStandardItem(tmp + "                        &" + y))
-            self.roz.lv_index = (roz.model.rowCount()) - 1
-        # mySetCursor(self, tmp)
-        if roz.model.rowCount() > 0:
-            mySetCursor(self, tmp)
-
-            # QApplication.setOverrideCursor(Qt.DragMoveCursor)
-
-        else:
-            pass
-            # QApplication.setOverrideCursor(Qt.ArrowCursor)
-            # QApplication.restoreOverrideCursor()
-
-    else:
-        print("Row %d and Column %d was clicked" % (row, column))
-        r, g, b = 255, 255, 255
-        item = self.ui.tableWidget2.item(row, column)
-
-        if item != None:
-            crd = id_to_card(roz, item.text())
-            ls = ""
-            for s in crd.lesson.subjInThisLesson:
-                ls = ls + s.name
-            self.ui.label.setText(ls)
-
-            # day, period, teachId = rowCol_to_dayPeriod(roz, row, column)
-
-            # c = roz.dopTable.get(dayPeriodTeach_to_addr(roz, day, period, teachId))
-
-            self.ui.tableWidget.setToolTip(card_to_tip(crd))
-
-            # timer.start(1000)
-
-            # print (c.lessonid)
-            self.ui.pushButton_4.setText(item.text())
-            s = crd.lesson.teacherInThisLesson[0].color
-            r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
-        else:
-            self.ui.pushButton_4.setText("")
-            self.ui.label.setText("")
-            self.ui.label.setToolTip("")
-            self.ui.tableWidget.setToolTip("")
-
-        self.ui.pushButton_4.setStyleSheet("background-color: rgb(" + str(r) + "," + str(g) + "," + str(b) + ")")
+# def _cell_clicked(self):
+#     roz = self.roz
+#     row = self.ui.tableWidget.currentRow()
+#     column = self.ui.tableWidget.currentColumn()
+#
+#     if self.mode == "edit":
+#         # Записуємо значення комірки до тимчасової змінної
+#         tmp = self.ui.tableWidget.item(row, column)
+#         tmp2 = self.ui.tableWidget2.item(row, column)
+#         if tmp == None:
+#             tmp = ""
+#             tmp2 = ""
+#         else:
+#             tmp = tmp.text()
+#             tmp2 = tmp2.text()
+#             #   Вилучаємо ім'я вчителя з картки
+#             c = id_to_card(self.roz, tmp2)
+#             if c != None:
+#                 c.period, c.day, teacher = rowCol_to_dayPeriodTeacher(roz, row, column)
+#                 # вилучатимемо вчителя лише коли він у відсутніх
+#                 for i, t in enumerate(c.lesson.teacherInThisLesson):
+#                     if t.id == teacher.id:
+#                         c.lesson.teacherInThisLesson.remove(t)
+#
+#         mySetCursor(self, tmp)
+#
+#         # Записуємо до комірки значення зі списку
+#
+#         self.ui.pushButton_4.setText(tmp)
+#         kl = ["", ""]
+#         kli = ["", ""]
+#         if roz.lv_index > -1:
+#             klAll = QtWidgets.QTableWidgetItem(self.ui.listView.model().item(self.roz.lv_index).text())
+#             klAll = klAll.text()
+#             kl = klAll.split("&")
+#             kl[0] = kl[0].rstrip()
+#             kl[1] = kl[1].rstrip()
+#
+#             kli[0] = QtWidgets.QTableWidgetItem(kl[0])
+#             kli[1] = QtWidgets.QTableWidgetItem(kl[1])
+#         else:
+#             kli[0] = QtWidgets.QTableWidgetItem("")
+#             kli[1] = QtWidgets.QTableWidgetItem("")
+#
+#         # Тут перевіримо, чи можна ставити. Якщо інший вчитель, то тільки урок відсутнього вчителя
+#         c = id_to_card(self.roz, kl[1])
+#         # визначаємо вчителя відсутнього з вибраному в списку
+#         teach = self.ui.listWidget.item(self.ui.listWidget.currentRow()).text()
+#
+#         self.ui.tableWidget.setItem(row, column, kli[0])
+#
+#         if c != None:
+#             if len(c.lesson.teacherInThisLesson) > 0:
+#                 s = c.lesson.teacherInThisLesson[0].color
+#             else:
+#                 s = "#FFFFFF"
+#             r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
+#             self.ui.tableWidget.item(row, column).setBackground(QtGui.QColor(r, g, b))
+#             # Шукаємо за  id картку уроку та змінюємо в ній day, period
+#             c.period, c.day, teacher = rowCol_to_dayPeriodTeacher(roz, row, column)
+#             f = 0
+#             for t in c.lesson.teacherInThisLesson:
+#                 if t == teacher:
+#                     f = 1
+#                     break
+#             if f == 0:
+#                 c.lesson.teacherInThisLesson.append(teacher)
+#             self.ui.tableWidget.setToolTip(card_to_tip(c))
+#         self.ui.tableWidget2.setItem(row, column, kli[1])
+#         #           проходимо по стовпчику і вилучаємо картки з даним класом до списку
+#         #   тут не класи треба, а вчителів звільнять теж
+#         for r in range(0, len(roz.teachers) - 1):
+#             if r == row:
+#                 continue
+#             if kl[0] != "":
+#                 if self.ui.tableWidget.item(r, column) != None:
+#                     s1 = self.ui.tableWidget.item(r, column).text()
+#                     if s1.strip() == kl[0].strip():
+#                         k_l = self.ui.tableWidget2.item(r, column)
+#                         if k_l == None:
+#                             k_l = ""
+#                         else:
+#                             k_l = k_l.text()
+#                         roz.model.appendRow(QStandardItem(kl[0] + "                        &" + k_l))
+#                         k_l = QtWidgets.QTableWidgetItem("")
+#                         self.ui.tableWidget.setItem(r, column, k_l)
+#
+#                         self.ui.tableWidget2.setItem(r, column, k_l)
+#             #    тепер перевіримо вчителів, що йдуть в парі
+#
+#         # Вилучаємо зі списку зчитане значення
+#         roz.model.removeRow(self.roz.lv_index)
+#
+#         # #           проходимо по стовпчику і вилучаємо картки з даною групою/класом до списку
+#         # if self.ui.tableWidget2.item(row, column) != None:
+#         #     s1 = self.ui.tableWidget2.item(row, column).text().strip()
+#         # else:
+#         #     s1 = ""
+#         # gr0 = cardId_to_groupId(roz, s1)
+#         # for r in range(0, len(roz.teachers) - 1):
+#         #     if r == row:
+#         #         continue
+#         #     if self.ui.tableWidget2.item(r, column) != None:
+#         #         s1 = self.ui.tableWidget2.item(r, column).text()
+#         #         # Шукаємо картку
+#         #         gr = cardId_to_groupId(roz, sl)
+#         #         if equGrups(gr0, gr):
+#         #             pass
+#         #
+#         #
+#         #
+#         #
+#         #
+#         #         # roz.model.appendRow(QStandardItem(kl[0] + "                        &" + k_l))
+#         #         # k_l = QtWidgets.QTableWidgetItem("")
+#         #         # self.ui.tableWidget.setItem(r, column, k_l)
+#         #         #
+#         #         # self.ui.tableWidget2.setItem(r, column, k_l)
+#         #
+#         # # Вилучаємо зі списку зчитане значення
+#         # roz.model.removeRow(self.roz.lv_index)
+#
+#         if self.roz.lv_index > roz.model.rowCount() - 1:
+#             self.roz.lv_index = roz.model.rowCount() - 1
+#         if self.roz.lv_index > -1:
+#             tmp2 = self.ui.listView.model().item(self.roz.lv_index).text()
+#             if tmp2.index("&") > -1:
+#                 x, y = tmp2.split("&")
+#             else:
+#                 x = tmp2
+#                 y = ""
+#             x = x.rstrip()
+#             self.ui.pushButton_4.setText(x)
+#         else:
+#             y = tmp2
+#         # Записуємо до списку значення, яке на початку було в комірці
+#         if tmp != "":
+#             roz.model.appendRow(QStandardItem(tmp + "                        &" + y))
+#             self.roz.lv_index = (roz.model.rowCount()) - 1
+#         # mySetCursor(self, tmp)
+#         if roz.model.rowCount() > 0:
+#             mySetCursor(self, tmp)
+#
+#             # QApplication.setOverrideCursor(Qt.DragMoveCursor)
+#
+#         else:
+#             pass
+#             # QApplication.setOverrideCursor(Qt.ArrowCursor)
+#             # QApplication.restoreOverrideCursor()
+#
+#     else:
+#         print("Row %d and Column %d was clicked" % (row, column))
+#         r, g, b = 255, 255, 255
+#         item = self.ui.tableWidget2.item(row, column)
+#
+#         if item != None:
+#             crd = id_to_card(roz, item.text())
+#             ls = ""
+#             for s in crd.lesson.subjInThisLesson:
+#                 ls = ls + s.name
+#             self.ui.label.setText(ls)
+#
+#             # day, period, teachId = rowCol_to_dayPeriod(roz, row, column)
+#
+#             # c = roz.dopTable.get(dayPeriodTeach_to_addr(roz, day, period, teachId))
+#
+#             self.ui.tableWidget.setToolTip(card_to_tip(crd))
+#
+#             # timer.start(1000)
+#
+#             # print (c.lessonid)
+#             self.ui.pushButton_4.setText(item.text())
+#             s = crd.lesson.teacherInThisLesson[0].color
+#             r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
+#         else:
+#             self.ui.pushButton_4.setText("")
+#             self.ui.label.setText("")
+#             self.ui.label.setToolTip("")
+#             self.ui.tableWidget.setToolTip("")
+#
+#         self.ui.pushButton_4.setStyleSheet("background-color: rgb(" + str(r) + "," + str(g) + "," + str(b) + ")")
 
         # self.ui.tableWidget.mouseReleaseEvent = self.myMouseReleaseEvent
         # self.ui.tableWidget.mousePressEvent = self.mousePressEvent
