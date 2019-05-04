@@ -138,8 +138,9 @@ def list_to_card(self, row):
     else:
         klAll = QtWidgets.QTableWidgetItem(self.ui.listView.model().item(row).text())
         klAll = klAll.text()
-        klas, id_card = klAll.split("&")
+        klas, teacher, id_card = klAll.split("&")
         klas = klas.rstrip()
+        teacher = teacher.rstrip()
         id_card = id_card.rstrip()
         card = id_to_card(self.roz, id_card)
         self.roz.model.removeRow(self.ui.listView.selectedIndexes()[0].row())
@@ -154,12 +155,17 @@ def card_to_list(self, card):
     if card != None:
         id_card = card.id
         klas = ""
+        teacher = ""
         for cl in card.lesson.classInThisLesson:
             klas += cl.short + " "
+        for tc in card.lesson.teacherInThisLesson:
+            teacher += tc.short + " "
         klas = klas.strip()
+        teacher = teacher.strip()
+
         if klas != "":
             # Додати, якщо такого немає
-            self.roz.model.appendRow(QStandardItem(klas + "                        &" + id_card))
+            self.roz.model.appendRow(QStandardItem(klas + " &"  +teacher+ " &" + id_card))
             # Тут встановимо виділення в listView на останній елемент
             r = self.ui.listView.model().rowCount() - 1
             self.roz.lv_index = r
@@ -218,7 +224,16 @@ def cell_clicked(self):
              #       вилучаємо до списку картки вчителів, до яких ставимо урок
                 # проходимо по таблиці, і знайшовщи відповідний клас, переносимо його урок до списку
                 # з таблиці ж прибираємо
-                for r in range(0,)
+                for t in self.roz.teachers:
+                    r = int(t.id[1:]) - 1  # номер рядка вчителя
+                    if r == row:
+                        continue
+                    item = self.ui.tableWidget2.item(r, column)
+                    if item != None:
+                        klas_e, card_e = cell_to_card(self, r, column)
+                        if klas_e.strip() == klas0.strip():
+                            card_to_list(self, card_e)
+                            card_remove(self, card_e)
 
             else:
                 #       якщо урок відсутнього, то можна до іншого
