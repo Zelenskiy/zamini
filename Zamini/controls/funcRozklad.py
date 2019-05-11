@@ -1,6 +1,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow, QAction,\
-                            QWidget, qApp
+from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, \
+    QWidget, qApp
+
+from Zamini.controls.control import card_to_list
 
 """"
 def getForCard(day,period,weeks):
@@ -22,11 +24,12 @@ def getForCard(day,period,weeks):
                     
     return clas_s, teach_s, subj_s, classr_s,group_s
 """
-def getForCard(roz, day, period, teach, weeks):
 
+
+def getForCard(roz, day, period, teach, weeks):
     for c in roz.cards:
         if c.day == day:
-            if c.period==period:
+            if c.period == period:
                 tFlag = False
                 for t in c.teacherInThisLesson:
                     if t.id == teach:
@@ -34,6 +37,7 @@ def getForCard(roz, day, period, teach, weeks):
                 if ((c.weeks == weeks) or (c.weeks == "1")) and (tFlag):
                     return c
     return None
+
 
 def id_to_card(roz, id):
     if id == None:
@@ -47,12 +51,12 @@ def id_to_card(roz, id):
 
     return None
 
+
 def rowCol_to_dayPeriod(self, row, col):
     day = col // self.roz.periods_count
     period = col % self.roz.periods_count + 1
-    teachId = "*" + str(row+1)
+    teachId = "*" + str(row + 1)
     return day, period, teachId
-
 
 
 def rowCol_to_addr(roz, row, col):
@@ -60,6 +64,7 @@ def rowCol_to_addr(roz, row, col):
     period = col % roz.periods_count + 1
     teachId = "*" + str(row + 1)
     return dayPeriodTeach_to_addr(roz, day, period, teachId)
+
 
 def rowCol_to_dayPeriodTeacher(self, row, col):
     day = col // self.roz.periods_count
@@ -72,27 +77,29 @@ def rowCol_to_dayPeriodTeacher(self, row, col):
             break
     return day, period, teacher
 
-def dayPeriodTeach_to_addr(roz, day, period, teachId):   #teachId Приклад "*1"
+
+def dayPeriodTeach_to_addr(roz, day, period, teachId):  # teachId Приклад "*1"
     row = int(teachId[1:]) - 1
     col = len(roz.periods) * int(day) + int(period) - 1
-    return "R"+str(row)+"C"+str(col)
+    return "R" + str(row) + "C" + str(col)
 
 
-
-def addr_to_dayPeriodTeach(roz,adr):
+def addr_to_dayPeriodTeach(roz, adr):
     n = adr.find("C")
-    teachId = "*"+adr[1:n]
+    teachId = "*" + adr[1:n]
     col = int(adr[n + 1:])
     day = col // roz.periods_count
     period = col % roz.periods_count + 1
     return day, period, teachId
 
-def equGrups(gr1 , gr2):
+
+def equGrups(gr1, gr2):
     for g1 in gr1:
         for g2 in gr2:
             if g1.id == g2.id:
                 return True
     return False
+
 
 def card_to_tip(crd):
     t_s = ""
@@ -115,6 +122,7 @@ def addr_to_card(roz, adr):
     print(adr)
     return len(roz.cards)
 
+
 def cardId_to_groupId(roz, cardId):
     for c in roz.cards:
         for g in c.lesson.groupInThisLesson:
@@ -123,7 +131,7 @@ def cardId_to_groupId(roz, cardId):
 
 
 def fillTable(self, ui, roz):
-    #Заповнення списку вчителів у комбобокс
+    # Заповнення списку вчителів у комбобокс
     ui.comboBox.clear()
     ui.comboBox.addItem("-------")
     for t in roz.teachers:
@@ -161,6 +169,9 @@ def fillTable(self, ui, roz):
         ui.tableWidget2.setVerticalHeaderLabels(labelVert)
 
     for c in roz.cards:
+        if c.period == "-1" or c.day == "-1":   # Тут додамо картку до списку, а не в таблицю
+            # card_to_list(self, с)
+            continue
         col = len(roz.periods) * int(c.day) + int(c.period) - 1
         w = c.lesson.weeks
         if (ui.radioButton.isChecked()) and (w == "01"):
@@ -179,8 +190,5 @@ def fillTable(self, ui, roz):
             r, g, b = int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16)
             if ui.tableWidget.item(row, col) != None:
                 ui.tableWidget.item(row, col).setBackground(QtGui.QColor(r, g, b))
-            #roz.dopTable[row][col] = c
-            #roz.dopTable["R"+str(row)+"C"+str(col)] = c
-
-
-
+            # roz.dopTable[row][col] = c
+            # roz.dopTable["R"+str(row)+"C"+str(col)] = c

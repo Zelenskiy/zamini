@@ -13,8 +13,8 @@ from ui_m.mainform import *
 # from Zamini.controls.control import *
 # from Zamini.controls.funcRozklad import *
 # from Zamini.models.rozklad import *
-from controls.control import cell_clicked, mySetCursor
-from controls.funcRozklad import id_to_card, fillTable
+from controls.control import cell_clicked, mySetCursor,id_to_card, fillTable
+# from controls.funcRozklad import id_to_card, fillTable
 from models.rozklad import Rozklad
 
 
@@ -38,14 +38,15 @@ class MyWin(QtWidgets.QMainWindow):
 
         self.roz.periods_count = len(self.roz.periods)
 
-        fillTable(self, self.ui, self.roz)
+        fillTable(self)
+        # fillTable(self, self.ui, self.roz)
         periods_count = len(self.roz.periods)
 
         self.roz.model = QStandardItemModel()
 
         # list_init(self, self.roz.model)
 
-        self.ui.listView.setModel(self.roz.model)
+        # self.ui.listView.setModel(self.roz.model)
         self.ui.tableWidget.setMouseTracking(True)
 
         # Тут описуємо події
@@ -68,7 +69,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.tableWidget.cellClicked.connect(self.cell_was_clicked)
 
 
-        self.ui.listView.clicked.connect(self.list_click)
+        self.ui.listWidget2.clicked.connect(self.list_click)
         # self.ui.listView.paintEvent = self.paintEvent
 
 
@@ -126,8 +127,10 @@ class MyWin(QtWidgets.QMainWindow):
         if event.key() == QtCore.Qt.Key_Escape:
             print("pressed key " + str(event.key()))
             self.roz.lv_index = -1
-            ix = self.ui.listView.model().index(-1, 0)
-            self.ui.listView.selectionModel().setCurrentIndex(ix, QItemSelectionModel.ClearAndSelect)
+            # self.ui.listWidget2.set
+            # ix = self.ui.listView.model().index(-1, 0)
+            # self.ui.listView.selectionModel().setCurrentIndex(ix,
+            #                             QItemSelectionModel.ClearAndSelect)
             self.ui.pushButton_4.setText("")
             # QApplication.setOverrideCursor(Qt.ArrowCursor)
             mySetCursor(self, "")
@@ -137,25 +140,24 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.tableWidget.setToolTip("")
 
     def list_click(self):
-        # Запам'ятовуємо номер вибраного рядка
-        self.roz.lv_index = self.ui.listView.selectedIndexes()[0].row()
-        s = self.ui.listView.model().item(self.roz.lv_index).text()
-        kl = ["", ""]
-        kl = s.split("&")
-        kl[0] = kl[0].rstrip()
-        kl[1] = kl[1].rstrip()
-        id = kl[1]
-        card = id_to_card(self.roz, id)
+
+        s = self.ui.listWidget2.item(self.ui.listWidget2.currentRow()).text()
+
+        klas, teach, id_card = s.split("_")
+        klas = klas.rstrip()
+        id_card = id_card.rstrip()
+        teach = teach.rstrip()
+        card = id_to_card(self.roz, id_card)
         if card != None:
             if card.lesson.teacherInThisLesson != None:
                 s = card.lesson.subjInThisLesson[0].short + "; " + \
                     card.lesson.teacherInThisLesson[0].short
             else:
                 s = card.lesson.subjInThisLesson[0].short
-            self.ui.listView.setToolTip(s)
+            self.ui.listWidget2.setToolTip(s)
 
-            self.ui.pushButton_4.setText(kl[0])
-            mySetCursor(self, kl[0])
+            self.ui.pushButton_4.setText(klas)
+            mySetCursor(self, klas)
         else:
             mySetCursor(self, "")
         # Встановлюємо підказку для вибраного рядка
@@ -171,10 +173,10 @@ class MyWin(QtWidgets.QMainWindow):
         return True
 
     def radioButton_Click(self):
-        fillTable(self, self.ui, self.roz)
+        fillTable(self)
 
     def radioButton_2_Click(self):
-        fillTable(self, self.ui, self.roz)
+        fillTable(self)
 
     def btn1_Click(self):
         self.ui.tableWidget2.setVisible(not self.ui.tableWidget2.isVisible())
@@ -240,7 +242,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.roz.lv_index = (self.roz.model.rowCount()) - 1
 
     def list_show(self):
-        self.ui.listView.setVisible(True)
+        self.ui.listWidget2.setVisible(True)
 
 def my_exception_hook(exctype, value, traceback):
     # Print the error and traceback
